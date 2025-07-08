@@ -20,6 +20,14 @@ public class Watch {
         brand = b.toUpperCase();
     }
 
+    public LocalDate getLastAdjust(){
+        return lastAdjust;
+    }
+
+    public void setLastAdjust(LocalDate date){
+        lastAdjust = date;
+    }
+
     public void setModel(String m){
         model = m.toUpperCase();
     }

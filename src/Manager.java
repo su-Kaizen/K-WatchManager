@@ -1,8 +1,14 @@
 import java.io.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.time.*;
+import java.util.concurrent.TimeUnit;
+
 public class Manager {
     public static Scanner sc = new Scanner(System.in);
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
     ArrayList<Watch> watches;
 
     public void Manager(){
@@ -34,9 +40,7 @@ public class Manager {
     }
 
     public void addWatch(){
-        System.out.print("Add the a watch with the following format:\n" +
-                "Brand@Model@Accuracy@Caliber@MovementType\n" +
-                "If you can not specify one of the fields, just put a '*' instead.");
+       Visual.showAddWatch();
 
         String watchInput = Manager.getInput();
         Watch w = Watch.makeWatch(watchInput);
@@ -46,13 +50,57 @@ public class Manager {
         System.out.println("Successfully added!");
     }
 
-
-
-
-
     public static String getInput(){
         System.out.print("\n> ");
         return sc.nextLine();
+    }
+
+    public void mainMenu(){
+        Visual.showMain();
+        String input = getInput();
+        String[] split = input.split("-");
+        switch (split[0]){
+            case "1" -> addWatch();
+            case "2" -> checkAccuracy(split[1]);
+            case "3" -> adjustWatch(split[1]);
+            default -> System.out.println("Invalid option...");
+        }
+    }
+
+    public void checkAccuracy(String id){
+        Watch watch = watches.get(Integer.parseInt(id)); // get the specified watch
+        LocalDate last = watch.getLastAdjust(); // The last adjustment
+        LocalDate nowDate = LocalDate.now();
+        LocalTime now = LocalTime.now();
+        now = now.plusMinutes(1); // The actual time with one minute more
+
+        Visual.ask4Time(now.format(formatter)+":00");
+
+        String input = getInput();
+
+        LocalTime watchHour = LocalTime.parse(input); // parse the watch time
+
+        // Getting the difference between the real time and the watch one
+        String diff = now.until(watchHour, ChronoUnit.SECONDS)+"";
+        diff = !diff.contains("-") ? "+"+diff : diff;
+
+        System.out.println("The watch has a "+diff+" seconds deviation");
+
+        if(last != null){
+            int days = (int) last.until(nowDate,ChronoUnit.DAYS);
+            days = Math.abs(days);
+            double deviationPerDay = Integer.parseInt(diff)/days;
+            System.out.println("The last adjustment was in "+last+"\n" +
+                    "Thats a round "+deviationPerDay+" seconds per day");
+        }
+    }
+
+
+
+    public void adjustWatch(String id){
+        Watch watch = watches.get(Integer.parseInt(id));
+        System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
+        String input = getInput();
     }
 
 }
