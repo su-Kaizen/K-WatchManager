@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Watch {
+public class Watch implements Serializable {
     private String caliber;
     private String brand;
     private String model;

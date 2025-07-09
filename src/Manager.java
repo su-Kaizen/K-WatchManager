@@ -11,7 +11,7 @@ public class Manager {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
     ArrayList<Watch> watches;
 
-    public void Manager(){
+    public Manager(){
         int status = loadWatches();
         if(status == -1){
             watches = new ArrayList<>();
@@ -39,32 +39,31 @@ public class Manager {
         }
     }
 
+    public String mainMenu(){
+        Visual.showMain();
+        String input = getInput();
+        String[] split = input.split("-");
+        switch (split[0]){
+            case "1" -> addWatch();
+            case "2" -> {if(split.length == 2) {checkAccuracy(split[1]);} else{Visual.error();}}
+            case "3" -> {if(split.length == 2) {adjustWatch(split[1]);} else{Visual.error();}}
+            case "4" -> showWatches();
+            case "e" -> System.out.println("Exiting...\n");
+            default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
+        }
+
+
+        return input;
+    }
     public void addWatch(){
-       Visual.showAddWatch();
+        Visual.showAddWatch();
 
         String watchInput = Manager.getInput();
         Watch w = Watch.makeWatch(watchInput);
 
         watches.add(w);
         this.saveWatches();
-        System.out.println("Successfully added!");
-    }
-
-    public static String getInput(){
-        System.out.print("\n> ");
-        return sc.nextLine();
-    }
-
-    public void mainMenu(){
-        Visual.showMain();
-        String input = getInput();
-        String[] split = input.split("-");
-        switch (split[0]){
-            case "1" -> addWatch();
-            case "2" -> checkAccuracy(split[1]);
-            case "3" -> adjustWatch(split[1]);
-            default -> System.out.println("Invalid option...");
-        }
+        System.out.println(Visual.GREEN+"Successfully added!\n"+Visual.END);
     }
 
     public void checkAccuracy(String id){
@@ -84,23 +83,47 @@ public class Manager {
         String diff = now.until(watchHour, ChronoUnit.SECONDS)+"";
         diff = !diff.contains("-") ? "+"+diff : diff;
 
-        System.out.println("The watch has a "+diff+" seconds deviation");
+        System.out.println("Your watch has a "+diff+" seconds deviation.");
 
         if(last != null){
             int days = (int) last.until(nowDate,ChronoUnit.DAYS);
             days = Math.abs(days);
             double deviationPerDay = Integer.parseInt(diff)/days;
             System.out.println("The last adjustment was in "+last+"\n" +
-                    "Thats a round "+deviationPerDay+" seconds per day");
+                    "That's a round "+deviationPerDay+" seconds per day.\n");
+        }
+        else{
+            System.out.println();
         }
     }
-
-
 
     public void adjustWatch(String id){
         Watch watch = watches.get(Integer.parseInt(id));
         System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
-        String input = getInput();
+        String input = getInput().toLowerCase();
+        if(input.equals("today")){
+            watch.setLastAdjust(LocalDate.now());
+        }
+        else{
+            String[] date = input.split("-");
+            watch.setLastAdjust(LocalDate.of(
+                    Integer.parseInt(date[0]),
+                    Integer.parseInt(date[1]),
+                    Integer.parseInt(date[2])));
+        }
+        System.out.println(Visual.GREEN+"Successfully adjusted the watch!\n"+Visual.END);
     }
 
+    public void showWatches(){
+        Visual.line();
+        for(int i = 0; i<watches.size(); i++){
+            System.out.println(i+" -> "+watches.get(i));
+        }
+        Visual.line();
+    }
+
+    public static String getInput(){
+        System.out.print("> ");
+        return sc.nextLine().trim();
+    }
 }

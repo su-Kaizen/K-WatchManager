@@ -15,16 +15,24 @@ public class Visual {
                 "[2] Check watch accuracy\n" +
                 "[3] Adjust watch\n" +
                 "[4] Show watches\n" +
-                "Once you know the ID of a watch you have to concatenate de option and the ID, for example, to adjust the watch 2: '3-2'");
+                "[-1] Exit\n" +
+                "Once you know the ID of a watch you have to concatenate the option and the ID, for example, to adjust the watch 2, type: '3-2'");
     }
 
     public static void showAddWatch(){
-        System.out.print("Add the a watch with the following format:\n" +
+        System.out.println("Add the a watch with the following format:\n" +
                 "Brand@Model@Accuracy@Caliber@MovementType\n" +
                 "If you can not specify one of the fields, just put a '*' instead.");
     }
 
     public static void ask4Time(String now){
         System.out.println("What time (hh:mm:ss) is it in your watch at: "+now+" ?");
+    }
+
+    public static void line(){
+        System.out.println("========================================================================");
+    }
+    public static void error(){
+        System.out.println(Visual.RED+"Please type in the correct format...\n"+Visual.END);
     }
 }
