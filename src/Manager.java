@@ -72,7 +72,7 @@ public class Manager {
         LocalDate nowDate = LocalDate.now();
         LocalTime now = LocalTime.now();
         now = now.plusMinutes(1); // The actual time with one minute more
-
+        now = now.minusSeconds(now.getSecond()); // Remove the seconds, to do properly the dif later
         Visual.ask4Time(now.format(formatter)+":00");
 
         String input = getInput();
@@ -111,6 +111,7 @@ public class Manager {
                     Integer.parseInt(date[1]),
                     Integer.parseInt(date[2])));
         }
+        saveWatches();
         System.out.println(Visual.GREEN+"Successfully adjusted the watch!\n"+Visual.END);
     }
 

@@ -10,6 +10,6 @@ public class LauncherManager {
        do{
             input = m.mainMenu();
        }
-       while(!input.equals("-1"));
+       while(!input.equals("e"));
     }
 }
