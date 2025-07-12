@@ -40,6 +40,7 @@ public class Manager {
     }
 
     public String mainMenu(){
+        showWatches();
         Visual.showMain();
         String input = getInput();
         String[] split = input.split("-");
@@ -47,11 +48,10 @@ public class Manager {
             case "1" -> addWatch();
             case "2" -> {if(split.length == 2) {checkAccuracy(split[1]);} else{Visual.error();}}
             case "3" -> {if(split.length == 2) {adjustWatch(split[1]);} else{Visual.error();}}
-            case "4" -> showWatches();
             case "e" -> System.out.println("Exiting...\n");
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
-
+        getInput();
 
         return input;
     }
@@ -63,7 +63,7 @@ public class Manager {
 
         watches.add(w);
         this.saveWatches();
-        System.out.println(Visual.GREEN+"Successfully added!\n"+Visual.END);
+        System.out.println(Visual.GREEN+"Successfully added!"+Visual.END);
     }
 
     public void checkAccuracy(String id){
@@ -90,10 +90,7 @@ public class Manager {
             days = Math.abs(days);
             double deviationPerDay = Integer.parseInt(diff)/days;
             System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
-                    ". That's a round "+deviationPerDay+" seconds per day.\n");
-        }
-        else{
-            System.out.println();
+                    ". That's a round "+deviationPerDay+" seconds per day.");
         }
     }
 
@@ -112,7 +109,7 @@ public class Manager {
                     Integer.parseInt(date[2])));
         }
         saveWatches();
-        System.out.println(Visual.GREEN+"Successfully adjusted the watch!\n"+Visual.END);
+        System.out.println(Visual.GREEN+"Successfully adjusted the watch!"+Visual.END);
     }
 
     public void showWatches(){
@@ -134,7 +131,6 @@ public class Manager {
         if(diff == 0){
             return "(today)";
         }
-
 
         return diff == 1 ? "("+diff+" day ago)" : "("+diff+" days ago)";
     }
