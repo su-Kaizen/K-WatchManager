@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 public class Visual {
     public static final String BLACK = "\033[0;30m";
     public static final String RED = "\033[0;31m";
@@ -14,7 +16,6 @@ public class Visual {
         System.out.println("[1] Add watch\n" +
                 "[2] Check watch accuracy\n" +
                 "[3] Adjust watch\n" +
-                "[4] Show watches\n" +
                 "[e] Exit\n" +
                 "Once you know the ID of a watch you have to concatenate the option and the ID, for example, to adjust the watch 2, type: '3-2'");
     }
@@ -30,10 +31,18 @@ public class Visual {
     }
 
     public static void line(){
-        System.out.println("========================================================================");
+        System.out.println("=====================================================================================================================");
     }
 
     public static void error(){
         System.out.println(Visual.RED+"Please type in the correct format...\n"+Visual.END);
+    }
+    public static void clear(){ // No se como lo hace pero funciona (borra la terminal)
+        try {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        }
+        catch (IOException | InterruptedException ex) {
+            System.err.println("Ha ocurrido un problema...\n");
+        }
     }
 }
