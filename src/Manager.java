@@ -89,8 +89,8 @@ public class Manager {
             int days = (int) last.until(nowDate,ChronoUnit.DAYS);
             days = Math.abs(days);
             double deviationPerDay = Integer.parseInt(diff)/days;
-            System.out.println("The last adjustment was in "+last+"\n" +
-                    "That's a round "+deviationPerDay+" seconds per day.\n");
+            System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
+                    ". That's a round "+deviationPerDay+" seconds per day.\n");
         }
         else{
             System.out.println();
@@ -126,5 +126,16 @@ public class Manager {
     public static String getInput(){
         System.out.print("> ");
         return sc.nextLine().trim();
+    }
+
+    public static String getDaysAgo(LocalDate date){
+        long diff = date.until(LocalDate.now(), ChronoUnit.DAYS);
+
+        if(diff == 0){
+            return "(today)";
+        }
+
+
+        return diff == 1 ? "("+diff+" day ago)" : "("+diff+" days ago)";
     }
 }
