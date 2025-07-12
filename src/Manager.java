@@ -42,7 +42,7 @@ public class Manager {
     public String mainMenu(){
         showWatches();
         Visual.showMain();
-        String input = getInput();
+        String input = getInput().toLowerCase();
         String[] split = input.split("-");
         switch (split[0]){
             case "1" -> addWatch();
@@ -51,8 +51,11 @@ public class Manager {
             case "e" -> System.out.println("Exiting...\n");
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
-        getInput();
 
+        if(!split[0].equals("e")){
+            getInput();
+        }
+        Visual.clear();
         return input;
     }
     public void addWatch(){
