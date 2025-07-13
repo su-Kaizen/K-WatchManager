@@ -116,6 +116,7 @@ public class Manager {
     }
 
     public void showWatches(){
+        Visual.header();
         Visual.line();
         for(int i = 0; i<watches.size(); i++){
             System.out.println(i+" -> "+watches.get(i));
