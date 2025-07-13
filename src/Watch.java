@@ -37,7 +37,7 @@ public class Watch implements Serializable {
     public String toString(){
         String s = brand+" "+model+" | "+caliber+" | "+theoreticAccuracy+" | "+type;
 
-        return lastAdjust == null ? s : s+" | Last adjust: "+lastAdjust+" "+Manager.getDaysAgo(lastAdjust);
+        return lastAdjust == null ? s : s+" | "+lastAdjust+" "+Manager.getDaysAgo(lastAdjust);
     }
 
     public static Watch makeWatch(String input){

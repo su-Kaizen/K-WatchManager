@@ -34,6 +34,12 @@ public class Visual {
         System.out.println("=====================================================================================================================");
     }
 
+    public static void header(){
+        System.out.println("+--------------------------------------------------------------------------------+");
+        System.out.println("| ID | WATCH NAME | CALIBER | THEORETIC DEVIATION | CALIBER TYPE | LAST ADJUSTED |");
+        System.out.println("+--------------------------------------------------------------------------------+");
+    }
+
     public static void error(){
         System.out.println(Visual.RED+"Please type in the correct format...\n"+Visual.END);
     }
