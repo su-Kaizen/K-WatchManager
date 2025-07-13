@@ -1,0 +1,2 @@
+** CONFIG FILE: WRITE DOWN BELOW (line 2) THE PROJECT FOLDER **
+C:\\Users\\david\\IdeaProjects\\K-WatchManager
