@@ -138,4 +138,14 @@ public class Manager {
 
         return diff == 1 ? "("+diff+" day ago)" : "("+diff+" days ago)";
     }
+
+    public int modifyWatch(String id){
+        int i = Integer.parseInt(id);
+        Visual.header();
+        System.out.println(watches.get(i));
+        System.out.println("Write all the changes in order separated with a #, if you want to mantain a field unchanged, write an'*'");
+        String result = getInput();
+
+        return 0;
+    }
 }

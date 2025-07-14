@@ -16,6 +16,7 @@ public class Visual {
         System.out.println("[1] Add watch\n" +
                 "[2] Check watch accuracy\n" +
                 "[3] Adjust watch\n" +
+                "[4] Modify watch data" +
                 "[e] Exit\n" +
                 "Once you know the ID of a watch you have to concatenate the option and the ID, for example, to adjust the watch 2, type: '3-2'");
     }
