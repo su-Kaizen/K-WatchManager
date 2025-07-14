@@ -48,6 +48,7 @@ public class Manager {
             case "1" -> addWatch();
             case "2" -> {if(split.length == 2) {checkAccuracy(split[1]);} else{Visual.error();}}
             case "3" -> {if(split.length == 2) {adjustWatch(split[1]);} else{Visual.error();}}
+            case "4" -> {if(split.length == 2) {modifyWatch(split[1]);} else{Visual.error();}}
             case "e" -> System.out.println("Exiting...\n");
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
@@ -137,5 +138,18 @@ public class Manager {
         }
 
         return diff == 1 ? "("+diff+" day ago)" : "("+diff+" days ago)";
+    }
+
+    public int modifyWatch(String id){
+        Visual.clear();
+        int i = Integer.parseInt(id);
+        Visual.shortHeader();
+        Watch w = watches.get(i);
+        System.out.println(w);
+        System.out.println("Write all the changes in order separated with a #, if you want to maintain a field unchanged, write an'*'");
+        String result[] = getInput().split("\\#");
+        w.modifyData(result);
+        saveWatches();
+        return 0;
     }
 }
