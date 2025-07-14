@@ -2,6 +2,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Watch implements Serializable {
+    private static final long serialVersionUID = -8904047359388282986L;
     private String caliber;
     private String brand;
     private String model;
@@ -51,4 +52,17 @@ public class Watch implements Serializable {
         return new Watch(att[0], att[1], att[2], att[3], att[4]);
     }
 
+    public void modifyData(String data[]){
+        /* WATCH NAME | CALIBER | THEORETIC DEVIATION | CALIBER TYPE */
+        if (data.length == 4){
+            this.model = data[0].equals("*") ? this.model : data[0].toUpperCase();
+            this.caliber = data[1].equals("*") ? this.caliber : data[1];
+            this.theoreticAccuracy = data[2].equals("*") ? this.theoreticAccuracy : data[2];
+            this.type = data[3].equals("*") ? this.type : data[3].toUpperCase();
+        }
+        else{
+            Visual.error();
+        }
+
+    }
 }
