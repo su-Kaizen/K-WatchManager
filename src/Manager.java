@@ -42,7 +42,7 @@ public class Manager {
     public String mainMenu(){
         showWatches();
         Visual.showMain();
-        String input = getInput().toLowerCase();
+        String input = getInput(false).toLowerCase();
         String[] split = input.split("-");
         switch (split[0]){
             case "1" -> addWatch();
@@ -54,7 +54,7 @@ public class Manager {
         }
 
         if(!split[0].equals("e")){
-            getInput();
+            getInput(true);
         }
         Visual.clear();
         return input;
@@ -62,7 +62,7 @@ public class Manager {
     public void addWatch(){
         Visual.showAddWatch();
 
-        String watchInput = Manager.getInput();
+        String watchInput = Manager.getInput(false);
         Watch w = Watch.makeWatch(watchInput);
 
         watches.add(w);
@@ -79,7 +79,7 @@ public class Manager {
         now = now.minusSeconds(now.getSecond()); // Remove the seconds, to do properly the dif later
         Visual.ask4Time(now.format(formatter)+":00");
 
-        String input = getInput();
+        String input = getInput(false);
 
         LocalTime watchHour = LocalTime.parse(input); // parse the watch time
 
@@ -101,7 +101,7 @@ public class Manager {
     public void adjustWatch(String id){
         Watch watch = watches.get(Integer.parseInt(id));
         System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
-        String input = getInput().toLowerCase();
+        String input = getInput(false).toLowerCase();
         if(input.equals("today")){
             watch.setLastAdjust(LocalDate.now());
         }
@@ -125,8 +125,8 @@ public class Manager {
         Visual.line();
     }
 
-    public static String getInput(){
-        System.out.print("> ");
+    public static String getInput(boolean cont){
+        System.out.print(cont ? "\nPress enter..." : "> ");
         return sc.nextLine().trim();
     }
 
@@ -147,9 +147,10 @@ public class Manager {
         Watch w = watches.get(i);
         System.out.println(w);
         System.out.println("Write all the changes in order separated with a #, if you want to maintain a field unchanged, write an'*'");
-        String result[] = getInput().split("\\#");
+        String result[] = getInput(false).split("\\#");
         w.modifyData(result);
         saveWatches();
+        System.out.println(Visual.GREEN+"Watch data successfully changed!"+Visual.END);
         return 0;
     }
 }
