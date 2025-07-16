@@ -21,13 +21,9 @@ os.system('cls')
 print('················· EZ GIT ··················')
 print("Type the name of the branch that you are working on: ",end="")
 branch_name = input()
+commit_message = '"'+branch_name.replace('/','(')+'): '
 print("Type the commit message: ",end="")
-commit_message = input()
+commit_message += input()+'"'
 
 start_git_flow(branch_name,commit_message)
 print(c.green+'\nFinish!'+c.end)
-
-
-
-
-
