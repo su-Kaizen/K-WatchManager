@@ -107,14 +107,19 @@ public class Manager {
             watch.setLastAdjust(LocalDate.now());
         }
         else{
-            String[] date = input.split("-");
-            watch.setLastAdjust(LocalDate.of(
-                    Integer.parseInt(date[0]),
-                    Integer.parseInt(date[1]),
-                    Integer.parseInt(date[2])));
+            try {
+                String[] date = input.split("-");
+                watch.setLastAdjust(LocalDate.of(
+                        Integer.parseInt(date[0]),
+                        Integer.parseInt(date[1]),
+                        Integer.parseInt(date[2])));
+                saveWatches();
+                System.out.println(Visual.GREEN+"Successfully adjusted the watch!"+Visual.END);
+            }
+            catch(Exception ex){
+                Visual.error();
+            }
         }
-        saveWatches();
-        System.out.println(Visual.GREEN+"Successfully adjusted the watch!"+Visual.END);
     }
 
     public void showWatches(){
