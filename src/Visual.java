@@ -60,4 +60,13 @@ public class Visual {
         System.out.println(YELLOW+"/////////////////// K-WatchManager /////////////////// v1.0\n"+END);
     }
 
+    public static void sleep(int sec){
+        try{
+            sec = sec * 1000;
+            Thread.sleep(sec);
+        }
+        catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
+    }
 }
