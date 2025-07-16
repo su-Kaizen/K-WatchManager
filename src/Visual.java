@@ -36,12 +36,10 @@ public class Visual {
     }
 
     public static void header(){
-        System.out.println("+--------------------------------------------------------------------------------+");
         System.out.println("| ID | WATCH NAME | CALIBER | THEORETIC DEVIATION | CALIBER TYPE | LAST ADJUSTED |");
         System.out.println("+--------------------------------------------------------------------------------+");
     }
     public static void shortHeader(){
-        System.out.println("+-----------------------------------------------------------+");
         System.out.println("| WATCH NAME | CALIBER | THEORETIC DEVIATION | CALIBER TYPE |");
         System.out.println("+-----------------------------------------------------------+");
     }
@@ -57,4 +55,9 @@ public class Visual {
             System.err.println("Ha ocurrido un problema...\n");
         }
     }
+
+    public static void showTitle(){
+        System.out.println(YELLOW+"/////////////////// K-WatchManager /////////////////// v1.0\n"+END);
+    }
+
 }
