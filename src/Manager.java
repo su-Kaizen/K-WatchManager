@@ -24,7 +24,6 @@ public class Manager {
             watches = (ArrayList<Watch>) o.readObject();
         }
         catch(ClassNotFoundException | IOException ex){
-            ex.printStackTrace();
             return -1;
         }
         return 0;
@@ -40,6 +39,7 @@ public class Manager {
     }
 
     public String mainMenu(){
+        Visual.showTitle();
         showWatches();
         Visual.showMain();
         String input = getInput(false).toLowerCase();
@@ -64,10 +64,11 @@ public class Manager {
 
         String watchInput = Manager.getInput(false);
         Watch w = Watch.makeWatch(watchInput);
-
-        watches.add(w);
-        this.saveWatches();
-        System.out.println(Visual.GREEN+"Successfully added!"+Visual.END);
+        if(w != null){
+            watches.add(w);
+            this.saveWatches();
+            System.out.println(Visual.GREEN+"Successfully added!"+Visual.END);
+        }
     }
 
     public void checkAccuracy(String id){
@@ -119,8 +120,11 @@ public class Manager {
     public void showWatches(){
         Visual.header();
         Visual.line();
+        if(watches.isEmpty()){
+            System.out.println("No saved watches");
+        }
         for(int i = 0; i<watches.size(); i++){
-            System.out.println(i+" -> "+watches.get(i));
+            System.out.println("ID: "+i+" -> "+watches.get(i));
         }
         Visual.line();
     }
@@ -146,8 +150,8 @@ public class Manager {
         Visual.shortHeader();
         Watch w = watches.get(i);
         System.out.println(w);
-        System.out.println("Write all the changes in order separated with a #, if you want to maintain a field unchanged, write an'*'");
-        String result[] = getInput(false).split("\\#");
+        System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an'*'");
+        String result[] = getInput(false).split("\\@");
         w.modifyData(result);
         saveWatches();
         System.out.println(Visual.GREEN+"Watch data successfully changed!"+Visual.END);

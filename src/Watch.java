@@ -47,7 +47,8 @@ public class Watch implements Serializable {
         }
         String[] att = input.split("@");
         if(att.length != 5){
-            throw new IllegalArgumentException("Please.\n");
+            Visual.error();
+            return null;
         }
         return new Watch(att[0], att[1], att[2], att[3], att[4]);
     }
