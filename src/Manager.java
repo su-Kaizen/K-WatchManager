@@ -1,10 +1,8 @@
 import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.time.*;
-import java.util.concurrent.TimeUnit;
 
 public class Manager {
     public static Scanner sc = new Scanner(System.in);
