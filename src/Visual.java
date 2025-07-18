@@ -49,10 +49,15 @@ public class Visual {
     }
     public static void clear(){ // No se como lo hace pero funciona (borra la terminal)
         try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            if(System.getProperty("os.name").contains("Windows")){
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            else{
+                new ProcessBuilder("clear").start();
+            }
         }
         catch (IOException | InterruptedException ex) {
-            System.err.println("Ha ocurrido un problema...\n");
+            ex.printStackTrace();
         }
     }
 
@@ -60,13 +65,4 @@ public class Visual {
         System.out.println(YELLOW+"/////////////////// K-WatchManager /////////////////// v1.0 || github.com/su-Kaizen\n"+END);
     }
 
-    public static void sleep(int sec){
-        try{
-            sec = sec * 1000;
-            Thread.sleep(sec);
-        }
-        catch(InterruptedException ex){
-            ex.printStackTrace();
-        }
-    }
 }
