@@ -47,6 +47,7 @@ public class Manager {
             case "2" -> {if(split.length == 2) {checkAccuracy(split[1]);} else{Visual.error();}}
             case "3" -> {if(split.length == 2) {adjustWatch(split[1]);} else{Visual.error();}}
             case "4" -> {if(split.length == 2) {modifyWatch(split[1]);} else{Visual.error();}}
+            case "5" -> {if(split.length == 2) {showWatchHistory(split[1]);} else{Visual.error();}}
             case "e" -> System.out.println("Exiting...\n");
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
@@ -159,5 +160,12 @@ public class Manager {
         saveWatches();
         System.out.println(Visual.GREEN+"Watch data successfully changed!"+Visual.END);
         return 0;
+    }
+
+    public void showWatchHistory(String id){
+        int i = Integer.parseInt(id);
+
+        Watch w = watches.get(i);
+        w.showHistory();
     }
 }
