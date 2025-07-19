@@ -1,6 +1,6 @@
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Watch implements Serializable {
     private String caliber;
@@ -9,7 +9,7 @@ public class Watch implements Serializable {
     private String theoreticAccuracy;
     private String type;
     private LocalDate lastAdjust;
-    private ArrayList<LocalDate> history;
+    private TreeMap<LocalDate,String> log;
     public Watch(String b, String m, String t, String c, String ty){
         brand = b.toUpperCase();
         model = m;
@@ -17,7 +17,7 @@ public class Watch implements Serializable {
         caliber = c;
         type = ty.toUpperCase();
         lastAdjust = null;
-        history = new ArrayList<>();
+        log = new TreeMap<>();
     }
 
     public void setBrand(String b){
@@ -29,7 +29,6 @@ public class Watch implements Serializable {
     }
 
     public void setLastAdjust(LocalDate date){
-        history.add(date);
         lastAdjust = date;
     }
 
@@ -71,10 +70,11 @@ public class Watch implements Serializable {
 
     public void showHistory(){
         System.out.println("+----------------+");
-        for(LocalDate date: history){
-            System.out.println(date);
-        }
+
         System.out.println("+----------------+");
     }
 
+    public void addLog(LocalDate date, String action){
+        log.put(date,action);
+    }
 }

@@ -89,12 +89,18 @@ public class Manager {
 
         System.out.println("Your watch has a "+diff+" seconds deviation.");
 
+
         if(last != null){
             int days = (int) last.until(nowDate,ChronoUnit.DAYS);
             days = Math.abs(days);
             double deviationPerDay = Integer.parseInt(diff)/days;
             System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
                     ". That's a round "+deviationPerDay+" seconds per day.");
+
+            watch.addLog(LocalDate.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
+        }
+        else{
+            watch.addLog(LocalDate.now(),diff+" seconds deviation.");
         }
     }
 
@@ -103,15 +109,20 @@ public class Manager {
         System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
         String input = getInput(false).toLowerCase();
         if(input.equals("today")){
-            watch.setLastAdjust(LocalDate.now());
+            LocalDate now = LocalDate.now();
+            watch.setLastAdjust(now);
+            watch.addLog(now, "Adjusted.");
         }
         else{
             try {
                 String[] date = input.split("-");
-                watch.setLastAdjust(LocalDate.of(
+                LocalDate d = LocalDate.of(
                         Integer.parseInt(date[0]),
                         Integer.parseInt(date[1]),
-                        Integer.parseInt(date[2])));
+                        Integer.parseInt(date[2]));
+
+                watch.setLastAdjust(d);
+                watch.addLog(d,"Adjusted.");
                 saveWatches();
                 System.out.println(Visual.GREEN+"Successfully adjusted the watch!"+Visual.END);
             }
