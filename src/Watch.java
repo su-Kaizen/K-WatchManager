@@ -69,9 +69,16 @@ public class Watch implements Serializable {
     }
 
     public void showHistory(){
-        System.out.println("+----------------+");
-
-        System.out.println("+----------------+");
+        System.out.println("+--------------------------------+");
+        if(!log.isEmpty()){
+            for(LocalDate date: log.keySet()){
+                System.out.println(date+" -> "+log.get(date));
+            }
+        }
+        else{
+            System.out.println("No logs recorded");
+        }
+        System.out.println("+--------------------------------+");
     }
 
     public void addLog(LocalDate date, String action){

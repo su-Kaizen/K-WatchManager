@@ -175,7 +175,6 @@ public class Manager {
 
     public void showWatchHistory(String id){
         int i = Integer.parseInt(id);
-
         Watch w = watches.get(i);
         w.showHistory();
     }
