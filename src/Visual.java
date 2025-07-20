@@ -73,4 +73,8 @@ public class Visual {
         System.out.println(YELLOW+"/////////////////// K-WatchManager /////////////////// v1.0 || github.com/su-Kaizen\n"+END);
     }
 
+    public static void success(String message){
+        System.out.println(Visual.GREEN+message+Visual.END);
+    }
+
 }

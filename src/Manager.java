@@ -54,14 +54,14 @@ public class Manager {
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
 
-        if(!split[0].equals("e")){
+        if(!split[0].equals("e") && !split[0].equals("4")){
             getInput(true);
         }
         Visual.clear();
         return input;
     }
 
-    // adding watching
+    // adding a watch to the list
     public void addWatch(){
         Visual.showAddWatch();
         String watchInput = Manager.getInput(false);
@@ -105,7 +105,6 @@ public class Manager {
                 System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
                         ". That's a round "+deviationPerDay+" seconds per day.");
 
-
                 // Record a log on the watch with the seconds deviation per day.
                 w.addLog(LocalDate.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
             }
@@ -113,6 +112,7 @@ public class Manager {
                 // Without the deviation per day
                 w.addLog(LocalDate.now(),diff+" seconds deviation.");
             }
+            saveWatches(); // important to save the watches to keep the log updated
         }
     }
 
@@ -127,6 +127,8 @@ public class Manager {
                 LocalDate now = LocalDate.now();
                 w.setLastAdjust(now);
                 w.addLog(now, "Adjusted.");
+                Visual.success("Successfully adjusted the watch!");
+
             }
             else{
                 try { // trying to split the input date and parse it to LocalDate
@@ -138,13 +140,13 @@ public class Manager {
 
                     w.setLastAdjust(d);
                     w.addLog(d,"Adjusted.");
-                    saveWatches();
-                    System.out.println(Visual.GREEN+"Successfully adjusted the watch!"+Visual.END);
+                    Visual.success("Successfully adjusted the watch!");
                 }
                 catch(Exception ex){
                     Visual.error();
                 }
             }
+            saveWatches();
         }
     }
 
@@ -169,15 +171,13 @@ public class Manager {
 
     public static String getDaysAgo(LocalDate date){
         long diff = date.until(LocalDate.now(), ChronoUnit.DAYS);
-
         if(diff == 0){
             return "(today)";
         }
-
         return diff == 1 ? "("+diff+" day ago)" : "("+diff+" days ago)";
     }
 
-    public int modifyWatch(String id){
+    public void modifyWatch(String id){
         Watch w = getWatch(id);
         if(w != null){
             Visual.clear();
@@ -187,17 +187,33 @@ public class Manager {
             String result[] = getInput(false).split("@");
             w.modifyData(result);
             saveWatches();
-            System.out.println(Visual.GREEN+"Watch data successfully changed!"+Visual.END);
-            return 0;
+            Visual.success("Watch data successfully changed!");
         }
-
-        return 1;
     }
 
     public void showWatchHistory(String id){
         Watch w = getWatch(id);
         if(w != null){
-            w.showHistory();
+
+            // if this returns 0 means that the log is not empty
+            int r = w.showHistory();
+            if(r == 0){
+                System.out.println("Clear log? [Y/n]");
+                String input = getInput(false).toLowerCase();
+                if(input.equals("y")){
+                    System.out.println("You sure? [Y/n]");
+                    input = getInput(false).toLowerCase();
+                    if(input.equals("y")){
+                        w.clearLog();
+                        saveWatches();
+                        Visual.success("Watch logs successfully removed.");
+                        getInput(true);
+                    }
+                }
+            }
+            else{
+                getInput(true);
+            }
         }
     }
 
