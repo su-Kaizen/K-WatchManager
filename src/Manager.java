@@ -18,7 +18,6 @@ public class Manager {
 
     public int loadWatches(){
         try(ObjectInputStream o = new ObjectInputStream(new FileInputStream("watches.bin"))){
-
             watches = (ArrayList<Watch>) o.readObject();
         }
         catch(ClassNotFoundException | IOException ex){
@@ -46,7 +45,8 @@ public class Manager {
             case "1" -> addWatch();
             case "2" -> {if(split.length == 2) {checkAccuracy(split[1]);} else{Visual.error();}}
             case "3" -> {if(split.length == 2) {adjustWatch(split[1]);} else{Visual.error();}}
-            case "4" -> {if(split.length == 2) {modifyWatch(split[1]);} else{Visual.error();}}
+            case "4" -> {if(split.length == 2) {showWatchHistory(split[1]);} else{Visual.error();}}
+            case "5" -> {if(split.length == 2) {modifyWatch(split[1]);} else{Visual.error();}}
             case "e" -> System.out.println("Exiting...\n");
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
@@ -88,12 +88,18 @@ public class Manager {
 
         System.out.println("Your watch has a "+diff+" seconds deviation.");
 
+
         if(last != null){
             int days = (int) last.until(nowDate,ChronoUnit.DAYS);
             days = Math.abs(days);
             double deviationPerDay = Integer.parseInt(diff)/days;
             System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
                     ". That's a round "+deviationPerDay+" seconds per day.");
+
+            watch.addLog(LocalDate.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
+        }
+        else{
+            watch.addLog(LocalDate.now(),diff+" seconds deviation.");
         }
     }
 
@@ -102,15 +108,20 @@ public class Manager {
         System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
         String input = getInput(false).toLowerCase();
         if(input.equals("today")){
-            watch.setLastAdjust(LocalDate.now());
+            LocalDate now = LocalDate.now();
+            watch.setLastAdjust(now);
+            watch.addLog(now, "Adjusted.");
         }
         else{
             try {
                 String[] date = input.split("-");
-                watch.setLastAdjust(LocalDate.of(
+                LocalDate d = LocalDate.of(
                         Integer.parseInt(date[0]),
                         Integer.parseInt(date[1]),
-                        Integer.parseInt(date[2])));
+                        Integer.parseInt(date[2]));
+
+                watch.setLastAdjust(d);
+                watch.addLog(d,"Adjusted.");
                 saveWatches();
                 System.out.println(Visual.GREEN+"Successfully adjusted the watch!"+Visual.END);
             }
@@ -153,11 +164,17 @@ public class Manager {
         Visual.shortHeader();
         Watch w = watches.get(i);
         System.out.println(w);
-        System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an'*'");
+        System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an '*'");
         String result[] = getInput(false).split("\\@");
         w.modifyData(result);
         saveWatches();
         System.out.println(Visual.GREEN+"Watch data successfully changed!"+Visual.END);
         return 0;
+    }
+
+    public void showWatchHistory(String id){
+        int i = Integer.parseInt(id);
+        Watch w = watches.get(i);
+        w.showHistory();
     }
 }

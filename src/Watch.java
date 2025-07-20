@@ -1,21 +1,23 @@
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.*;
 
 public class Watch implements Serializable {
-    private static final long serialVersionUID = -8904047359388282986L;
     private String caliber;
     private String brand;
     private String model;
     private String theoreticAccuracy;
     private String type;
     private LocalDate lastAdjust;
-    public Watch(String b, String m, String t, String c, String ty){
+    private TreeMap<LocalDate,String> log;
+    public Watch(String b, String m, String ty, String c, String t){
         brand = b.toUpperCase();
         model = m;
-        theoreticAccuracy = t;
-        caliber = c;
         type = ty.toUpperCase();
+        caliber = c;
+        theoreticAccuracy = t;
         lastAdjust = null;
+        log = new TreeMap<>();
     }
 
     public void setBrand(String b){
@@ -36,7 +38,7 @@ public class Watch implements Serializable {
 
     @Override
     public String toString(){
-        String s = brand+" "+model+" | "+caliber+" | "+theoreticAccuracy+" | "+type;
+        String s = brand+" "+model+" | "+type+" | "+caliber+" | "+theoreticAccuracy;
 
         return lastAdjust == null ? s : s+" | "+lastAdjust+" "+Manager.getDaysAgo(lastAdjust);
     }
@@ -64,6 +66,22 @@ public class Watch implements Serializable {
         else{
             Visual.error();
         }
+    }
 
+    public void showHistory(){
+        System.out.println("+--------------------------------+");
+        if(!log.isEmpty()){
+            for(LocalDate date: log.keySet()){
+                System.out.println(date+" -> "+log.get(date));
+            }
+        }
+        else{
+            System.out.println("No logs recorded");
+        }
+        System.out.println("+--------------------------------+");
+    }
+
+    public void addLog(LocalDate date, String action){
+        log.put(date,action);
     }
 }
