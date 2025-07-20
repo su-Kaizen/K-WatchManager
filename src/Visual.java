@@ -33,27 +33,29 @@ public class Visual {
     }
 
     public static void line(){
-        System.out.println("=====================================================================================================================");
+        System.out.println("+-------------------------------------------------------------------------------------------------------------------+");
     }
 
     public static void header(){
         System.out.println("| ID | BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC DEVIATION | LAST ADJUSTED |");
-        System.out.println("+-------------------------------------------------------------------------------+");
     }
 
     public static void shortHeader(){
         System.out.println("| BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC DEVIATION |");
-        System.out.println("+----------------------------------------------------------+");
     }
+
 
     public static void error(){
         System.out.println(Visual.RED+"Please type in the correct format..."+Visual.END);
     }
 
+    // Custom error message
     public static void error(String message){
         System.out.println(Visual.RED+message+Visual.END);
     }
-    public static void clear(){ // No se como lo hace pero funciona (borra la terminal)
+
+    // Clears the terminal
+    public static void clear(){
         try {
             if(System.getProperty("os.name").contains("Windows")){
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();

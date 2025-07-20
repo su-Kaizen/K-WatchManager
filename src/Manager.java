@@ -16,6 +16,7 @@ public class Manager {
         }
     }
 
+    // loads the list of watches and returns -1 if it fails.
     public int loadWatches(){
         try(ObjectInputStream o = new ObjectInputStream(new FileInputStream("watches.bin"))){
             watches = (ArrayList<Watch>) o.readObject();
@@ -26,6 +27,7 @@ public class Manager {
         return 0;
     }
 
+    // Save the list of watches
     public void saveWatches(){
         try(ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream("watches.bin"))){
             o.writeObject(watches);
@@ -35,6 +37,7 @@ public class Manager {
         }
     }
 
+    // show main menu
     public String mainMenu(){
         Visual.showTitle();
         showWatches();
@@ -57,6 +60,8 @@ public class Manager {
         Visual.clear();
         return input;
     }
+
+    // adding watching
     public void addWatch(){
         Visual.showAddWatch();
         String watchInput = Manager.getInput(false);
@@ -68,6 +73,7 @@ public class Manager {
         }
     }
 
+    //
     public void checkAccuracy(String id){
         Watch w = getWatch(id); // get the specified watch
         if(w != null){
@@ -88,17 +94,23 @@ public class Manager {
 
             System.out.println("Your watch has a "+diff+" seconds deviation.");
 
-
+            // if there is a last adjustment, make an approximate deviation per day
             if(last != null){
+                // The days difference between the last adjustment and today date.
                 int days = (int) last.until(nowDate,ChronoUnit.DAYS);
+
+                // avoiding negative value
                 days = Math.abs(days);
                 double deviationPerDay = Integer.parseInt(diff)/days;
                 System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
                         ". That's a round "+deviationPerDay+" seconds per day.");
 
+
+                // Record a log on the watch with the seconds deviation per day.
                 w.addLog(LocalDate.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
             }
             else{
+                // Without the deviation per day
                 w.addLog(LocalDate.now(),diff+" seconds deviation.");
             }
         }
@@ -108,14 +120,16 @@ public class Manager {
         Watch w = getWatch(id);
         if(w != null){
             System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
+
             String input = getInput(false).toLowerCase();
+            // Simply put the lastAdjustment to today
             if(input.equals("today")){
                 LocalDate now = LocalDate.now();
                 w.setLastAdjust(now);
                 w.addLog(now, "Adjusted.");
             }
             else{
-                try {
+                try { // trying to split the input date and parse it to LocalDate
                     String[] date = input.split("-");
                     LocalDate d = LocalDate.of(
                             Integer.parseInt(date[0]),
@@ -134,6 +148,7 @@ public class Manager {
         }
     }
 
+    // simple method to show the watch list
     public void showWatches(){
         Visual.header();
         Visual.line();
@@ -146,6 +161,7 @@ public class Manager {
         Visual.line();
     }
 
+    // just returns the user input
     public static String getInput(boolean cont){
         System.out.print(cont ? "\nPress enter..." : "> ");
         return sc.nextLine().trim();
@@ -165,12 +181,10 @@ public class Manager {
         Watch w = getWatch(id);
         if(w != null){
             Visual.clear();
-
             Visual.shortHeader();
-
             System.out.println(w);
             System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an '*'");
-            String result[] = getInput(false).split("\\@");
+            String result[] = getInput(false).split("@");
             w.modifyData(result);
             saveWatches();
             System.out.println(Visual.GREEN+"Watch data successfully changed!"+Visual.END);
@@ -187,6 +201,8 @@ public class Manager {
         }
     }
 
+
+    // A method to access securely to the arraylist avoiding possible exceptions like numberformatexception or indexoutofbounds
     public Watch getWatch(String i){
         Watch w = null;
         int id = -1;
