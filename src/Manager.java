@@ -77,13 +77,13 @@ public class Manager {
     public void checkAccuracy(String id){
         Watch w = getWatch(id); // get the specified watch
         if(w != null){
+            Visual.clear();
             LocalDate last = w.getLastAdjust(); // The last adjustment
             LocalDate nowDate = LocalDate.now();
             LocalTime now = LocalTime.now();
             now = now.plusMinutes(1); // The actual time with one minute more
             now = now.minusSeconds(now.getSecond()); // Remove the seconds, to do properly the dif later
             Visual.ask4Time(now.format(formatter)+":00");
-
             String input = getInput(false);
 
             LocalTime watchHour = LocalTime.parse(input); // parse the watch time
@@ -119,6 +119,7 @@ public class Manager {
     public void adjustWatch(String id){
         Watch w = getWatch(id);
         if(w != null){
+            Visual.clear();
             System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
 
             String input = getInput(false).toLowerCase();
@@ -206,7 +207,7 @@ public class Manager {
                     if(input.equals("y")){
                         w.clearLog();
                         saveWatches();
-                        Visual.success("Watch logs successfully removed.");
+                        Visual.success("Watch logs removed.");
                         getInput(true);
                     }
                 }
@@ -216,7 +217,6 @@ public class Manager {
             }
         }
     }
-
 
     // A method to access securely to the arraylist avoiding possible exceptions like numberformatexception or indexoutofbounds
     public Watch getWatch(String i){
