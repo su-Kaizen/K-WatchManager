@@ -63,6 +63,7 @@ public class Manager {
 
     // adding a watch to the list
     public void addWatch(){
+        Visual.clear();
         Visual.showAddWatch();
         String watchInput = Manager.getInput(false);
         Watch w = Watch.makeWatch(watchInput);
