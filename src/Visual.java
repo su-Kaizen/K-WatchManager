@@ -70,7 +70,7 @@ public class Visual {
     }
 
     public static void showTitle(){
-        System.out.println(YELLOW+"/////////////////// K-WatchManager /////////////////// v1.0 || github.com/su-Kaizen\n"+END);
+        System.out.println(YELLOW+"/////////////////// K-WatchManager v1.0 /////////////////// || github.com/su-Kaizen\n"+END);
     }
 
     public static void success(String message){
