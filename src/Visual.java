@@ -16,14 +16,15 @@ public class Visual {
         System.out.println("[1] Add watch\n" +
                 "[2] Check watch accuracy\n" +
                 "[3] Adjust watch\n" +
-                "[4] Modify watch data\n" +
+                "[4] Show watch logs\n"+
+                "[5] Modify watch data\n" +
                 "[e] Exit\n" +
                 "Once you know the ID of a watch you have to concatenate the option and the ID, for example, to adjust the watch 2, type: '3-2'");
     }
 
     public static void showAddWatch(){
         System.out.println("Add the a watch with the following format:\n" +
-                "Brand@Model@Accuracy@Caliber@MovementType\n" +
+                "Brand@Model@MovementType@Caliber@TheoreticDeviation\n" +
                 "If you can not specify one of the fields, just put a '*' instead.");
     }
 
@@ -36,12 +37,13 @@ public class Visual {
     }
 
     public static void header(){
-        System.out.println("| ID | WATCH NAME | CALIBER | THEORETIC DEVIATION | CALIBER TYPE | LAST ADJUSTED |");
-        System.out.println("+--------------------------------------------------------------------------------+");
+        System.out.println("| ID | BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC DEVIATION | LAST ADJUSTED |");
+        System.out.println("+-------------------------------------------------------------------------------+");
     }
+
     public static void shortHeader(){
-        System.out.println("| WATCH NAME | CALIBER | THEORETIC DEVIATION | CALIBER TYPE |");
-        System.out.println("+-----------------------------------------------------------+");
+        System.out.println("| BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC DEVIATION |");
+        System.out.println("+----------------------------------------------------------+");
     }
 
     public static void error(){

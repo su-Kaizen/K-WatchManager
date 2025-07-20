@@ -18,7 +18,6 @@ public class Manager {
 
     public int loadWatches(){
         try(ObjectInputStream o = new ObjectInputStream(new FileInputStream("watches.bin"))){
-
             watches = (ArrayList<Watch>) o.readObject();
         }
         catch(ClassNotFoundException | IOException ex){
@@ -46,8 +45,8 @@ public class Manager {
             case "1" -> addWatch();
             case "2" -> {if(split.length == 2) {checkAccuracy(split[1]);} else{Visual.error();}}
             case "3" -> {if(split.length == 2) {adjustWatch(split[1]);} else{Visual.error();}}
-            case "4" -> {if(split.length == 2) {modifyWatch(split[1]);} else{Visual.error();}}
-            case "5" -> {if(split.length == 2) {showWatchHistory(split[1]);} else{Visual.error();}}
+            case "4" -> {if(split.length == 2) {showWatchHistory(split[1]);} else{Visual.error();}}
+            case "5" -> {if(split.length == 2) {modifyWatch(split[1]);} else{Visual.error();}}
             case "e" -> System.out.println("Exiting...\n");
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
@@ -165,7 +164,7 @@ public class Manager {
         Visual.shortHeader();
         Watch w = watches.get(i);
         System.out.println(w);
-        System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an'*'");
+        System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an '*'");
         String result[] = getInput(false).split("\\@");
         w.modifyData(result);
         saveWatches();

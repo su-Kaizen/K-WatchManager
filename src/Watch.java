@@ -10,12 +10,12 @@ public class Watch implements Serializable {
     private String type;
     private LocalDate lastAdjust;
     private TreeMap<LocalDate,String> log;
-    public Watch(String b, String m, String t, String c, String ty){
+    public Watch(String b, String m, String ty, String c, String t){
         brand = b.toUpperCase();
         model = m;
-        theoreticAccuracy = t;
-        caliber = c;
         type = ty.toUpperCase();
+        caliber = c;
+        theoreticAccuracy = t;
         lastAdjust = null;
         log = new TreeMap<>();
     }
@@ -38,7 +38,7 @@ public class Watch implements Serializable {
 
     @Override
     public String toString(){
-        String s = brand+" "+model+" | "+caliber+" | "+theoreticAccuracy+" | "+type;
+        String s = brand+" "+model+" | "+type+" | "+caliber+" | "+theoreticAccuracy;
 
         return lastAdjust == null ? s : s+" | "+lastAdjust+" "+Manager.getDaysAgo(lastAdjust);
     }
