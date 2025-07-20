@@ -47,7 +47,11 @@ public class Visual {
     }
 
     public static void error(){
-        System.out.println(Visual.RED+"Please type in the correct format...\n"+Visual.END);
+        System.out.println(Visual.RED+"Please type in the correct format..."+Visual.END);
+    }
+
+    public static void error(String message){
+        System.out.println(Visual.RED+message+Visual.END);
     }
     public static void clear(){ // No se como lo hace pero funciona (borra la terminal)
         try {

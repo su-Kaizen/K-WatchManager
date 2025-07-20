@@ -59,7 +59,6 @@ public class Manager {
     }
     public void addWatch(){
         Visual.showAddWatch();
-
         String watchInput = Manager.getInput(false);
         Watch w = Watch.makeWatch(watchInput);
         if(w != null){
@@ -70,63 +69,67 @@ public class Manager {
     }
 
     public void checkAccuracy(String id){
-        Watch watch = watches.get(Integer.parseInt(id)); // get the specified watch
-        LocalDate last = watch.getLastAdjust(); // The last adjustment
-        LocalDate nowDate = LocalDate.now();
-        LocalTime now = LocalTime.now();
-        now = now.plusMinutes(1); // The actual time with one minute more
-        now = now.minusSeconds(now.getSecond()); // Remove the seconds, to do properly the dif later
-        Visual.ask4Time(now.format(formatter)+":00");
+        Watch w = getWatch(id); // get the specified watch
+        if(w != null){
+            LocalDate last = w.getLastAdjust(); // The last adjustment
+            LocalDate nowDate = LocalDate.now();
+            LocalTime now = LocalTime.now();
+            now = now.plusMinutes(1); // The actual time with one minute more
+            now = now.minusSeconds(now.getSecond()); // Remove the seconds, to do properly the dif later
+            Visual.ask4Time(now.format(formatter)+":00");
 
-        String input = getInput(false);
+            String input = getInput(false);
 
-        LocalTime watchHour = LocalTime.parse(input); // parse the watch time
+            LocalTime watchHour = LocalTime.parse(input); // parse the watch time
 
-        // Getting the difference between the real time and the watch one
-        String diff = now.until(watchHour, ChronoUnit.SECONDS)+"";
-        diff = !diff.contains("-") ? "+"+diff : diff;
+            // Getting the difference between the real time and the watch one
+            String diff = now.until(watchHour, ChronoUnit.SECONDS)+"";
+            diff = !diff.contains("-") ? "+"+diff : diff;
 
-        System.out.println("Your watch has a "+diff+" seconds deviation.");
+            System.out.println("Your watch has a "+diff+" seconds deviation.");
 
 
-        if(last != null){
-            int days = (int) last.until(nowDate,ChronoUnit.DAYS);
-            days = Math.abs(days);
-            double deviationPerDay = Integer.parseInt(diff)/days;
-            System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
-                    ". That's a round "+deviationPerDay+" seconds per day.");
+            if(last != null){
+                int days = (int) last.until(nowDate,ChronoUnit.DAYS);
+                days = Math.abs(days);
+                double deviationPerDay = Integer.parseInt(diff)/days;
+                System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
+                        ". That's a round "+deviationPerDay+" seconds per day.");
 
-            watch.addLog(LocalDate.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
-        }
-        else{
-            watch.addLog(LocalDate.now(),diff+" seconds deviation.");
+                w.addLog(LocalDate.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
+            }
+            else{
+                w.addLog(LocalDate.now(),diff+" seconds deviation.");
+            }
         }
     }
 
     public void adjustWatch(String id){
-        Watch watch = watches.get(Integer.parseInt(id));
-        System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
-        String input = getInput(false).toLowerCase();
-        if(input.equals("today")){
-            LocalDate now = LocalDate.now();
-            watch.setLastAdjust(now);
-            watch.addLog(now, "Adjusted.");
-        }
-        else{
-            try {
-                String[] date = input.split("-");
-                LocalDate d = LocalDate.of(
-                        Integer.parseInt(date[0]),
-                        Integer.parseInt(date[1]),
-                        Integer.parseInt(date[2]));
-
-                watch.setLastAdjust(d);
-                watch.addLog(d,"Adjusted.");
-                saveWatches();
-                System.out.println(Visual.GREEN+"Successfully adjusted the watch!"+Visual.END);
+        Watch w = getWatch(id);
+        if(w != null){
+            System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
+            String input = getInput(false).toLowerCase();
+            if(input.equals("today")){
+                LocalDate now = LocalDate.now();
+                w.setLastAdjust(now);
+                w.addLog(now, "Adjusted.");
             }
-            catch(Exception ex){
-                Visual.error();
+            else{
+                try {
+                    String[] date = input.split("-");
+                    LocalDate d = LocalDate.of(
+                            Integer.parseInt(date[0]),
+                            Integer.parseInt(date[1]),
+                            Integer.parseInt(date[2]));
+
+                    w.setLastAdjust(d);
+                    w.addLog(d,"Adjusted.");
+                    saveWatches();
+                    System.out.println(Visual.GREEN+"Successfully adjusted the watch!"+Visual.END);
+                }
+                catch(Exception ex){
+                    Visual.error();
+                }
             }
         }
     }
@@ -159,22 +162,42 @@ public class Manager {
     }
 
     public int modifyWatch(String id){
-        Visual.clear();
-        int i = Integer.parseInt(id);
-        Visual.shortHeader();
-        Watch w = watches.get(i);
-        System.out.println(w);
-        System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an '*'");
-        String result[] = getInput(false).split("\\@");
-        w.modifyData(result);
-        saveWatches();
-        System.out.println(Visual.GREEN+"Watch data successfully changed!"+Visual.END);
-        return 0;
+        Watch w = getWatch(id);
+        if(w != null){
+            Visual.clear();
+
+            Visual.shortHeader();
+
+            System.out.println(w);
+            System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an '*'");
+            String result[] = getInput(false).split("\\@");
+            w.modifyData(result);
+            saveWatches();
+            System.out.println(Visual.GREEN+"Watch data successfully changed!"+Visual.END);
+            return 0;
+        }
+
+        return 1;
     }
 
     public void showWatchHistory(String id){
-        int i = Integer.parseInt(id);
-        Watch w = watches.get(i);
-        w.showHistory();
+        Watch w = getWatch(id);
+        if(w != null){
+            w.showHistory();
+        }
+    }
+
+    public Watch getWatch(String i){
+        Watch w = null;
+        int id = -1;
+        try{
+            id = Integer.valueOf(i);
+            w = watches.get(id);
+        }
+        catch (NumberFormatException | IndexOutOfBoundsException ex){
+            Visual.error("Invalid watch ID, please check the watchlist.");
+        }
+
+        return w;
     }
 }
