@@ -1,4 +1,5 @@
 import java.io.*;
+import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -8,8 +9,10 @@ public class Manager {
     public static Scanner sc = new Scanner(System.in);
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
     ArrayList<Watch> watches;
-
+    private DecimalFormat decimalFormat;
     public Manager(){
+
+        decimalFormat = new DecimalFormat("#.##");
         int status = loadWatches();
         if(status == -1){
             watches = new ArrayList<>();
@@ -102,7 +105,9 @@ public class Manager {
 
                 // avoiding negative value
                 days = Math.abs(days);
-                double deviationPerDay = Integer.parseInt(diff)/days;
+
+                // Round the double seconds to 2 decimals
+                String deviationPerDay = decimalFormat.format(Double.parseDouble(diff)/days).replace(",",".");
                 System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
                         ". That's a round "+deviationPerDay+" seconds per day.");
 
