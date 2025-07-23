@@ -11,6 +11,9 @@ public class Visual {
     public static final String WHITE = "\033[0;37m";
     public static final String END = "\033[0m";
 
+    public static void showTitle(){
+        System.out.println(YELLOW+"/////////////////// K-WatchManager v1.1 /////////////////// || github.com/su-Kaizen\n"+END);
+    }
 
     public static void showMain(){
         System.out.println("[1] Add watch\n" +
@@ -19,7 +22,7 @@ public class Visual {
                 "[4] Show watch logs\n"+
                 "[5] Modify watch data\n" +
                 "[e] Exit\n" +
-                "Once you know the ID of a watch you have to concatenate the option and the ID, for example, to adjust the watch 2, type: '3-2'");
+                "Concatenate the option and the ID with and '-', for example to adjust watch 4 type: '3-4'");
     }
 
     public static void showAddWatch(){
@@ -29,7 +32,7 @@ public class Visual {
     }
 
     public static void ask4Time(String now){
-        System.out.println("What time (hh:mm:ss) is it in your watch at: "+now+" ?");
+        System.out.println("What time (hh:mm:ss) is it in your watch at: "+now+" ?\nYou can check the exact time at https://time.is");
     }
 
     public static void line(){
@@ -69,12 +72,7 @@ public class Visual {
         }
     }
 
-    public static void showTitle(){
-        System.out.println(YELLOW+"/////////////////// K-WatchManager v1.0 /////////////////// || github.com/su-Kaizen\n"+END);
-    }
-
     public static void success(String message){
         System.out.println(Visual.GREEN+message+Visual.END);
     }
-
 }
