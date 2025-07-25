@@ -54,6 +54,7 @@ public class Manager {
             case "3" -> {if(split.length == 2) {adjustWatch(split[1]);} else{Visual.error();}}
             case "4" -> {if(split.length == 2) {showWatchHistory(split[1]);} else{Visual.error();}}
             case "5" -> {if(split.length == 2) {modifyWatch(split[1]);} else{Visual.error();}}
+            case "6" -> {if(split.length == 2) {removeWatch(split[1]);} else{Visual.error();}}
             case "e" -> System.out.println("Exiting...\n");
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
@@ -246,5 +247,22 @@ public class Manager {
         }
 
         return w;
+    }
+
+    public void removeWatch(String i){
+        Watch w = getWatch(i);
+        if(w!= null){
+            System.out.println("Are you sure that you want to delete this watch? [Y/n]:");
+            System.out.println(w.toString());
+            String choice = getInput(false).toLowerCase();
+            if(choice.equals("y")){
+                watches.remove(w);
+                Visual.success("Watch removed...");
+            }
+            else{
+                System.out.println("Watch not removed.");
+            }
+        }
+
     }
 }
