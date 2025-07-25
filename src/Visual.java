@@ -12,7 +12,7 @@ public class Visual {
     public static final String END = "\033[0m";
 
     public static void showTitle(){
-        System.out.println(YELLOW+"/////////////////// K-WatchManager v1.1 /////////////////// || github.com/su-Kaizen\n"+END);
+        System.out.println(YELLOW+"/////////////////// K-WatchManager v1.2 /////////////////// || github.com/su-Kaizen\n"+END);
     }
 
     public static void showMain(){
@@ -40,11 +40,11 @@ public class Visual {
     }
 
     public static void header(){
-        System.out.println("| ID | BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC DEVIATION | LAST ADJUSTED |");
+        System.out.println("| ID | BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC ACCURACY | LAST ADJUSTED |");
     }
 
     public static void shortHeader(){
-        System.out.println("| BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC DEVIATION |");
+        System.out.println("| BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC ACCURACY |");
     }
 
 
