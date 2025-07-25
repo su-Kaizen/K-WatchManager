@@ -1,6 +1,7 @@
 import java.io.*;
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.time.*;
@@ -89,8 +90,16 @@ public class Manager {
             now = now.minusSeconds(now.getSecond()); // Remove the seconds, to do properly the dif later
             Visual.ask4Time(now.format(formatter)+":00");
             String input = getInput(false);
+            LocalTime watchHour = null;
 
-            LocalTime watchHour = LocalTime.parse(input); // parse the watch time
+            try{
+               watchHour = LocalTime.parse(input); // parse the watch time
+            }
+            catch(DateTimeParseException ex){
+                Visual.error("Invalid time format, please write it correctly.");
+                return;
+            }
+
 
             // Getting the difference between the real time and the watch one
             String diff = now.until(watchHour, ChronoUnit.SECONDS)+"";
