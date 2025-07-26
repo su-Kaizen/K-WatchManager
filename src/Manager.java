@@ -26,6 +26,7 @@ public class Manager {
             watches = (ArrayList<Watch>) o.readObject();
         }
         catch(ClassNotFoundException | IOException ex){
+            ex.printStackTrace();
             return -1;
         }
         return 0;
@@ -199,12 +200,15 @@ public class Manager {
         if(w != null){
             Visual.clear();
             Visual.shortHeader();
+            Visual.line();
             System.out.println(w);
             System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an '*'");
             String result[] = getInput(false).split("@");
-            w.modifyData(result);
-            saveWatches();
-            Visual.success("Watch data successfully changed!");
+            int status = w.modifyData(result);
+            if(status == 0){
+                saveWatches();
+                Visual.success("Watch data successfully changed!");
+            }
         }
     }
 
