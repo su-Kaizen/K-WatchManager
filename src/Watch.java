@@ -42,9 +42,9 @@ public class Watch implements Serializable {
 
     @Override
     public String toString(){
-        String s = brand+" "+model+" | "+type+" | "+caliber+" | "+theoreticAccuracy+" | "+moreInfo;
+        String s = brand+" "+model+" | "+type+" | "+caliber+" | "+theoreticAccuracy;
 
-        return lastAdjust == null ? s : s+" | "+lastAdjust+" "+Manager.getDaysAgo(lastAdjust);
+        return lastAdjust == null ? s+" | "+moreInfo : s+" | "+lastAdjust+" "+Manager.getDaysAgo(lastAdjust)+" | "+moreInfo;
     }
 
     public static Watch makeWatch(String input){
