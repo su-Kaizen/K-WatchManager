@@ -10,12 +10,16 @@ public class Watch implements Serializable {
     private String type;
     private LocalDate lastAdjust;
     private TreeMap<LocalDate,String> log;
-    public Watch(String b, String m, String ty, String c, String t){
+    private String moreInfo;
+    private static final long serialVersionUID = -4126365443326262519L;
+    public Watch(String b, String m, String ty, String c, String t, String mi){
         brand = b.toUpperCase();
         model = m;
         type = ty.toUpperCase();
         caliber = c;
         theoreticAccuracy = t;
+        moreInfo = mi;
+
         lastAdjust = null;
         log = new TreeMap<>();
     }
@@ -38,7 +42,7 @@ public class Watch implements Serializable {
 
     @Override
     public String toString(){
-        String s = brand+" "+model+" | "+type+" | "+caliber+" | "+theoreticAccuracy;
+        String s = brand+" "+model+" | "+type+" | "+caliber+" | "+theoreticAccuracy+" | "+moreInfo;
 
         return lastAdjust == null ? s : s+" | "+lastAdjust+" "+Manager.getDaysAgo(lastAdjust);
     }
@@ -48,24 +52,29 @@ public class Watch implements Serializable {
             input = input.replace("*","Not specified");
         }
         String[] att = input.split("@");
-        if(att.length != 5){
+        if(att.length != 6){
             Visual.error();
             return null;
         }
-        return new Watch(att[0], att[1], att[2], att[3], att[4]);
+        return new Watch(att[0], att[1], att[2], att[3], att[4], att[5]);
     }
 
-    public void modifyData(String data[]){
-        /* WATCH NAME | CALIBER | THEORETIC DEVIATION | CALIBER TYPE */
-        if (data.length == 4){
-            this.model = data[0].equals("*") ? this.model : data[0].toUpperCase();
-            this.caliber = data[1].equals("*") ? this.caliber : data[1];
-            this.theoreticAccuracy = data[2].equals("*") ? this.theoreticAccuracy : data[2];
-            this.type = data[3].equals("*") ? this.type : data[3].toUpperCase();
+    public int modifyData(String data[]){
+        /* BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC ACCURACY | MORE INFO */
+        if (data.length == 6){
+            this.brand = data[0].equals("*") ? this.brand : data[0].toUpperCase();
+            this.model = data[1].equals("*") ? this.model : data[1];
+            this.type = data[2].equals("*") ? this.type : data[2].toUpperCase();
+            this.caliber = data[3].equals("*") ? this.caliber : data[3];
+            this.theoreticAccuracy = data[4].equals("*") ? this.theoreticAccuracy : data[4];
+            this.moreInfo = data[5].equals("*") ? this.moreInfo : data[5];
         }
         else{
             Visual.error();
+            return 1;
         }
+
+        return 0;
     }
 
     public int showHistory(){
