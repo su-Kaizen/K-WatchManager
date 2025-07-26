@@ -16,18 +16,20 @@ public class Visual {
     }
 
     public static void showMain(){
-        System.out.println("[1] Add watch\n" +
+        System.out.println(
+                "[1] Add watch\n" +
                 "[2] Check watch accuracy\n" +
                 "[3] Adjust watch\n" +
                 "[4] Show watch logs\n"+
                 "[5] Modify watch data\n" +
-                "[e] Exit\n" +
+                "[6] Delete watch\n" +
+                "[E] Exit\n" +
                 "Concatenate the option and the ID with and '-', for example to adjust watch 4 type: '3-4'");
     }
 
     public static void showAddWatch(){
         System.out.println("Add the a watch with the following format:\n" +
-                "Brand@Model@MovementType@Caliber@TheoreticDeviation\n" +
+                "Brand@Model@MovementType@Caliber@TheoreticAccuracy\n" +
                 "If you can not specify one of the fields, just put a '*' instead.");
     }
 
