@@ -257,6 +257,7 @@ public class Manager {
             String choice = getInput(false).toLowerCase();
             if(choice.equals("y")){
                 watches.remove(w);
+                saveWatches();
                 Visual.success("Watch removed...");
             }
             else{
