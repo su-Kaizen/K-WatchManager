@@ -42,9 +42,9 @@ public class Watch implements Serializable {
 
     @Override
     public String toString(){
-        String s = brand+" "+model+" | "+type+" | "+caliber+" | "+theoreticAccuracy;
+        String s = brand+Visual.PIPE+model+Visual.PIPE+type+Visual.PIPE+caliber+Visual.PIPE+theoreticAccuracy;
 
-        return lastAdjust == null ? s+" | "+moreInfo : s+" | "+lastAdjust+" "+Manager.getDaysAgo(lastAdjust)+" | "+moreInfo;
+        return lastAdjust == null ? s+Visual.PIPE+"N/a"+Visual.PIPE+moreInfo : s+Visual.PIPE+lastAdjust+" "+Manager.getDaysAgo(lastAdjust)+Visual.PIPE+moreInfo;
     }
 
     public static Watch makeWatch(String input){
@@ -79,18 +79,18 @@ public class Watch implements Serializable {
 
     public int showHistory(){
         int result = -1;
-        System.out.println("+--------------------------------+");
+        System.out.println(Visual.CYAN+"+-----------------------------------+"+Visual.END);
         if(!log.isEmpty()){
             for(LocalDate date: log.keySet()){
-                System.out.println(date+" -> "+log.get(date));
+                System.out.println(Visual.YELLOW+date+" -> "+log.get(date)+Visual.END);
             }
             result = 0;
         }
         else{
-            System.out.println("No logs recorded");
+            System.out.println(Visual.YELLOW+"No logs recorded"+Visual.END);
             result = 1;
         }
-        System.out.println("+--------------------------------+");
+        System.out.println(Visual.CYAN+"+-----------------------------------+"+Visual.END);
         return result;
     }
 

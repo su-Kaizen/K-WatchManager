@@ -26,7 +26,6 @@ public class Manager {
             watches = (ArrayList<Watch>) o.readObject();
         }
         catch(ClassNotFoundException | IOException ex){
-            ex.printStackTrace();
             return -1;
         }
         return 0;
@@ -80,7 +79,7 @@ public class Manager {
         }
     }
 
-    //
+
     public void checkAccuracy(String id){
         Watch w = getWatch(id); // get the specified watch
         if(w != null){
@@ -107,20 +106,24 @@ public class Manager {
             String diff = now.until(watchHour, ChronoUnit.SECONDS)+"";
             diff = !diff.contains("-") ? "+"+diff : diff;
 
-            System.out.println("Your watch has a "+diff+" seconds deviation.");
+            System.out.println(Visual.YELLOW+"Your watch has a "+Visual.CYAN+diff+Visual.YELLOW+" seconds deviation."+Visual.END);
 
             // if there is a last adjustment, make an approximate deviation per day
             if(last != null){
                 // The days difference between the last adjustment and today date.
-                int days = (int) last.until(nowDate,ChronoUnit.DAYS);
+
+                int days = 1;
+                if(!last.isEqual(nowDate)){
+                    days = (int) last.until(nowDate,ChronoUnit.DAYS);
+                }
 
                 // avoiding negative value
                 days = Math.abs(days);
 
                 // Round the double seconds to 2 decimals
                 String deviationPerDay = decimalFormat.format(Double.parseDouble(diff)/days).replace(",",".");
-                System.out.println("The last adjustment was in "+last+" "+getDaysAgo(last) +
-                        ". That's a round "+deviationPerDay+" seconds per day.");
+                System.out.println(Visual.YELLOW+"The last adjustment was in "+Visual.CYAN+last+Visual.YELLOW+" "+getDaysAgo(last) +
+                        ". That's a round "+Visual.CYAN+deviationPerDay+Visual.YELLOW+" seconds per day."+Visual.END);
 
                 // Record a log on the watch with the seconds deviation per day.
                 w.addLog(LocalDate.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
@@ -137,7 +140,7 @@ public class Manager {
         Watch w = getWatch(id);
         if(w != null){
             Visual.clear();
-            System.out.println("Write 'today' if it was adjusted today or write a date(yyyy-mm-dd)");
+            System.out.println(Visual.YELLOW+"Write 'today' if it was adjusted today or write a date("+Visual.CYAN+"yyyy-mm-dd"+Visual.YELLOW+")"+Visual.END);
 
             String input = getInput(false).toLowerCase();
             // Simply put the lastAdjustment to today
@@ -176,15 +179,17 @@ public class Manager {
             System.out.println("No saved watches");
         }
         for(int i = 0; i<watches.size(); i++){
-            System.out.println("ID: "+i+" -> "+watches.get(i));
+            System.out.println("  "+i+" "+Visual.PIPE+watches.get(i));
         }
         Visual.line();
     }
 
     // just returns the user input
     public static String getInput(boolean cont){
-        System.out.print(cont ? "\nPress enter..." : "> ");
-        return sc.nextLine().trim();
+        System.out.print(cont ? "\nPress enter..." : Visual.YELLOW+"> "+Visual.CYAN);
+        String input = sc.nextLine().trim();
+        System.out.print(Visual.END);
+        return input;
     }
 
     public static String getDaysAgo(LocalDate date){
@@ -202,7 +207,7 @@ public class Manager {
             Visual.shortHeader();
             Visual.line();
             System.out.println(w);
-            System.out.println("Write all the changes in order separated with a @, if you want to maintain a field unchanged, write an '*'");
+            System.out.println(Visual.YELLOW+"Write all the changes in order separated with a "+Visual.AT+", if you want to maintain a field unchanged, write an '*'"+Visual.END);
             String result[] = getInput(false).split("@");
             int status = w.modifyData(result);
             if(status == 0){
@@ -219,10 +224,10 @@ public class Manager {
             // if this returns 0 means that the log is not empty
             int r = w.showHistory();
             if(r == 0){
-                System.out.println("Clear log? [Y/n]");
+                System.out.println(Visual.YELLOW+"Clear log? [Y/n]"+Visual.END);
                 String input = getInput(false).toLowerCase();
                 if(input.equals("y")){
-                    System.out.println("You sure? [Y/n]");
+                    System.out.println(Visual.YELLOW+"You sure? [Y/n]"+Visual.END);
                     input = getInput(false).toLowerCase();
                     if(input.equals("y")){
                         w.clearLog();
@@ -256,7 +261,7 @@ public class Manager {
     public void removeWatch(String i){
         Watch w = getWatch(i);
         if(w!= null){
-            System.out.println("Are you sure that you want to delete this watch? [Y/n]:");
+            System.out.println(Visual.YELLOW+"Are you sure that you want to delete this watch? [Y/n]:"+Visual.END);
             System.out.println(w.toString());
             String choice = getInput(false).toLowerCase();
             if(choice.equals("y")){
@@ -265,7 +270,7 @@ public class Manager {
                 Visual.success("Watch removed...");
             }
             else{
-                System.out.println("Watch not removed.");
+                Visual.error("Watch not removed.");
             }
         }
 

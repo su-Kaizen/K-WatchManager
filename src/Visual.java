@@ -7,16 +7,18 @@ public class Visual {
     public static final String YELLOW = "\033[0;33m";
     public static final String BLUE = "\033[0;34m";
     public static final String PURPLE = "\033[0;35m";
-    public static final String CYAN = "\033[0;36m";
+    public static final String CYAN = "\033[0;34m";
     public static final String WHITE = "\033[0;37m";
     public static final String END = "\033[0m";
-
+    public static final String PIPE = CYAN+" | "+END;
+    public static final String AT = CYAN+"@"+YELLOW;
+    // cyan = "\033[0;36m"
     public static void showTitle(){
-        System.out.println(YELLOW+"/////////////////// K-WatchManager v2.0 /////////////////// || github.com/su-Kaizen\n"+END);
+        System.out.println(YELLOW+"/////////////////// K-WatchManager v2.1 /////////////////// || github.com/su-Kaizen\n"+END);
     }
 
     public static void showMain(){
-        System.out.println(
+        System.out.println(YELLOW+
                 "[1] Add watch\n" +
                 "[2] Check watch accuracy\n" +
                 "[3] Adjust watch\n" +
@@ -24,29 +26,29 @@ public class Visual {
                 "[5] Modify watch data\n" +
                 "[6] Delete watch\n" +
                 "[E] Exit\n" +
-                "Concatenate the option and the ID with and '-', for example to adjust watch 4 type: '3-4'");
+                "Concatenate the option and the ID with and '-', for example to adjust watch 4 type: '3-4'."+END);
     }
 
     public static void showAddWatch(){
-        System.out.println("Add the a watch with the following format:\n" +
-                "Brand@Model@MovementType@Caliber@TheoreticAccuracy\n" +
-                "If you can not specify one of the fields, just put a '*' instead.");
+        System.out.println(YELLOW+"Add the a watch with the following format:\n" +
+                "Brand"+AT+"Model"+AT+"MovementType"+AT+"Caliber"+AT+"TheoreticAccuracy"+AT+"MoreInformation\n" +
+                "If you can not specify one of the fields, just put a '*' instead."+END);
     }
 
     public static void ask4Time(String now){
-        System.out.println("What time (hh:mm:ss) is it in your watch at: "+now+" ?\nYou can check the exact time at https://time.is");
+        System.out.println(YELLOW+"What time ("+CYAN+"hh:mm:ss"+YELLOW+") is it in your watch at: "+CYAN+now+YELLOW+" ?\nYou can check the exact time at "+CYAN+"https://time.is"+END);
     }
 
     public static void line(){
-        System.out.println("+-------------------------------------------------------------------------------------------------------------------+");
+        System.out.println(CYAN+"+-------------------------------------------------------------------------------------------------------------------+"+END);
     }
 
     public static void header(){
-        System.out.println("| ID | BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC ACCURACY | LAST ADJUSTED | MORE INFO");
+        System.out.println(CYAN+"|  ID  |  BRAND  |  MODEL  |  MOVEMENT  |  CALIBER  |  THEORETIC ACCURACY  |  LAST ADJUSTED  |  MORE INFO"+END);
     }
 
     public static void shortHeader(){
-        System.out.println("BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC ACCURACY | MORE INFO");
+        System.out.println(CYAN+"BRAND | MODEL | MOVEMENT | CALIBER | THEORETIC ACCURACY | MORE INFO"+END);
     }
 
 
