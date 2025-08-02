@@ -206,7 +206,7 @@ public class Manager {
             Visual.clear();
             Visual.shortHeader();
             Visual.line();
-            System.out.println(w);
+            System.out.println(w.shortString());
             System.out.println(Visual.YELLOW+"Write all the changes in order separated with a "+Visual.AT+", if you want to maintain a field unchanged, write an '*'"+Visual.END);
             String result[] = getInput(false).split("@");
             int status = w.modifyData(result);

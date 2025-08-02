@@ -47,6 +47,10 @@ public class Watch implements Serializable {
         return lastAdjust == null ? s+Visual.PIPE+"N/a"+Visual.PIPE+moreInfo : s+Visual.PIPE+lastAdjust+" "+Manager.getDaysAgo(lastAdjust)+Visual.PIPE+moreInfo;
     }
 
+    public String shortString(){
+        return brand+Visual.PIPE+model+Visual.PIPE+type+Visual.PIPE+caliber+Visual.PIPE+theoreticAccuracy+Visual.PIPE+moreInfo;
+    }
+
     public static Watch makeWatch(String input){
         if(input.contains("*")){
             input = input.replace("*","Not specified");
