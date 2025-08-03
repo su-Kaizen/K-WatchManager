@@ -11,22 +11,30 @@ public class Manager {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
     ArrayList<Watch> watches;
     private DecimalFormat decimalFormat;
+    String colors;
     public Manager(){
 
         decimalFormat = new DecimalFormat("#.##");
         int status = loadWatches();
         if(status == -1){
             watches = new ArrayList<>();
+
+        }
+        else if(status == -2){
+            colors = "";
         }
     }
 
     // loads the list of watches and returns -1 if it fails.
     public int loadWatches(){
+        int result = -1;
         try(ObjectInputStream o = new ObjectInputStream(new FileInputStream("watches.bin"))){
             watches = (ArrayList<Watch>) o.readObject();
+            result --;
+            colors = (String) o.readObject();
         }
         catch(ClassNotFoundException | IOException ex){
-            return -1;
+            return result;
         }
         return 0;
     }
@@ -35,6 +43,7 @@ public class Manager {
     public void saveWatches(){
         try(ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream("watches.bin"))){
             o.writeObject(watches);
+
         }
         catch(IOException ex){
             ex.printStackTrace();
@@ -55,6 +64,7 @@ public class Manager {
             case "4" -> {if(split.length == 2) {showWatchHistory(split[1]);} else{Visual.error();}}
             case "5" -> {if(split.length == 2) {modifyWatch(split[1]);} else{Visual.error();}}
             case "6" -> {if(split.length == 2) {removeWatch(split[1]);} else{Visual.error();}}
+            case "7" -> changeColors();
             case "e" -> System.out.println("Exiting...\n");
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
@@ -106,7 +116,7 @@ public class Manager {
             String diff = now.until(watchHour, ChronoUnit.SECONDS)+"";
             diff = !diff.contains("-") ? "+"+diff : diff;
 
-            System.out.println(Visual.YELLOW+"Your watch has a "+Visual.CYAN+diff+Visual.YELLOW+" seconds deviation."+Visual.END);
+            System.out.println(Visual.color1 +"Your watch has a "+Visual.color2+diff+Visual.color1 +" seconds deviation."+Visual.END);
 
             // if there is a last adjustment, make an approximate deviation per day
             if(last != null){
@@ -122,8 +132,8 @@ public class Manager {
 
                 // Round the double seconds to 2 decimals
                 String deviationPerDay = decimalFormat.format(Double.parseDouble(diff)/days).replace(",",".");
-                System.out.println(Visual.YELLOW+"The last adjustment was in "+Visual.CYAN+last+Visual.YELLOW+" "+getDaysAgo(last) +
-                        ". That's a round "+Visual.CYAN+deviationPerDay+Visual.YELLOW+" seconds per day."+Visual.END);
+                System.out.println(Visual.color1 +"The last adjustment was in "+Visual.color2+last+Visual.color1 +" "+getDaysAgo(last) +
+                        ". That's a round "+Visual.color2+deviationPerDay+Visual.color1 +" seconds per day."+Visual.END);
 
                 // Record a log on the watch with the seconds deviation per day.
                 w.addLog(LocalDate.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
@@ -140,7 +150,7 @@ public class Manager {
         Watch w = getWatch(id);
         if(w != null){
             Visual.clear();
-            System.out.println(Visual.YELLOW+"Write 'today' if it was adjusted today or write a date("+Visual.CYAN+"yyyy-mm-dd"+Visual.YELLOW+")"+Visual.END);
+            System.out.println(Visual.color1 +"Write 'today' if it was adjusted today or write a date("+Visual.color2+"yyyy-mm-dd"+Visual.color1 +")"+Visual.END);
 
             String input = getInput(false).toLowerCase();
             // Simply put the lastAdjustment to today
@@ -186,7 +196,7 @@ public class Manager {
 
     // just returns the user input
     public static String getInput(boolean cont){
-        System.out.print(cont ? "\nPress enter..." : Visual.YELLOW+"> "+Visual.CYAN);
+        System.out.print(cont ? "\nPress enter..." : Visual.color1 +"> "+Visual.color2);
         String input = sc.nextLine().trim();
         System.out.print(Visual.END);
         return input;
@@ -207,7 +217,7 @@ public class Manager {
             Visual.shortHeader();
             Visual.line();
             System.out.println(w.shortString());
-            System.out.println(Visual.YELLOW+"Write all the changes in order separated with a "+Visual.AT+", if you want to maintain a field unchanged, write an '*'"+Visual.END);
+            System.out.println(Visual.color1 +"Write all the changes in order separated with a "+Visual.AT+", if you want to maintain a field unchanged, write an '*'"+Visual.END);
             String result[] = getInput(false).split("@");
             int status = w.modifyData(result);
             if(status == 0){
@@ -224,10 +234,10 @@ public class Manager {
             // if this returns 0 means that the log is not empty
             int r = w.showHistory();
             if(r == 0){
-                System.out.println(Visual.YELLOW+"Clear log? [Y/n]"+Visual.END);
+                System.out.println(Visual.color1 +"Clear log? [Y/n]"+Visual.END);
                 String input = getInput(false).toLowerCase();
                 if(input.equals("y")){
-                    System.out.println(Visual.YELLOW+"You sure? [Y/n]"+Visual.END);
+                    System.out.println(Visual.color1 +"You sure? [Y/n]"+Visual.END);
                     input = getInput(false).toLowerCase();
                     if(input.equals("y")){
                         w.clearLog();
@@ -261,7 +271,7 @@ public class Manager {
     public void removeWatch(String i){
         Watch w = getWatch(i);
         if(w!= null){
-            System.out.println(Visual.YELLOW+"Are you sure that you want to delete this watch? [Y/n]:"+Visual.END);
+            System.out.println(Visual.color1 +"Are you sure that you want to delete this watch? [Y/n]:"+Visual.END);
             System.out.println(w.toString());
             String choice = getInput(false).toLowerCase();
             if(choice.equals("y")){
@@ -273,6 +283,11 @@ public class Manager {
                 Visual.error("Watch not removed.");
             }
         }
+    }
 
+    public void changeColors(){
+        System.out.println("Select the color1 and color2 for the program:\n" +
+                Visual.RED+"RED "+Visual.GREEN+"GREEN"+Visual.YELLOW+" YELLOW"+Visual.BLUE+" BLUE"+Visual.CYAN+" CYAN"+Visual.PURPLE+" PURPLE"+Visual.END);
+        String choice = getInput(false).toUpperCase();
     }
 }
