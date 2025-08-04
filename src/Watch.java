@@ -86,12 +86,12 @@ public class Watch implements Serializable {
         System.out.println(Visual.CYAN+"+-----------------------------------+"+Visual.END);
         if(!log.isEmpty()){
             for(LocalDate date: log.keySet()){
-                System.out.println(Visual.YELLOW+date+" -> "+log.get(date)+Visual.END);
+                System.out.println(Visual.color1 +date+" -> "+log.get(date)+Visual.END);
             }
             result = 0;
         }
         else{
-            System.out.println(Visual.YELLOW+"No logs recorded"+Visual.END);
+            System.out.println(Visual.color1 +"No logs recorded"+Visual.END);
             result = 1;
         }
         System.out.println(Visual.CYAN+"+-----------------------------------+"+Visual.END);
