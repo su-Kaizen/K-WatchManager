@@ -16,26 +16,20 @@ public class Manager {
 
         decimalFormat = new DecimalFormat("#.##");
         int status = loadWatches();
+        loadColors();
         if(status == -1){
             watches = new ArrayList<>();
 
-        }
-        else if(status == -2){
-            colors = "";
         }
     }
 
     // loads the list of watches and returns -1 if it fails.
     public int loadWatches(){
-        int result = -1;
         try(ObjectInputStream o = new ObjectInputStream(new FileInputStream("watches.bin"))){
             watches = (ArrayList<Watch>) o.readObject();
-            result --;
-            colors = (String) o.readObject();
-            configureColors(colors);
         }
         catch(ClassNotFoundException | IOException ex){
-            return result;
+            return -1;
         }
         return 0;
     }
@@ -44,7 +38,24 @@ public class Manager {
     public void saveWatches(){
         try(ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream("watches.bin"))){
             o.writeObject(watches);
-            o.writeObject(colors);
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveColors(){
+        try(BufferedWriter b = new BufferedWriter(new FileWriter("colors.txt"))){
+            b.write(colors);
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public void loadColors(){
+        try(BufferedReader b = new BufferedReader(new FileReader("colors.txt"))){
+            Visual.updateColors(b.readLine());
         }
         catch(IOException ex){
             ex.printStackTrace();
@@ -290,28 +301,15 @@ public class Manager {
         System.out.println("Select the color1 and color2 for the program:\n" +
                 Visual.RED+"RED "+Visual.GREEN+"GREEN"+Visual.YELLOW+" YELLOW"+Visual.BLUE+" BLUE"+Visual.CYAN+" CYAN"+Visual.PURPLE+" PURPLE"+Visual.END);
         String choice = getInput(false).toUpperCase();
-        int status = configureColors(choice);
+        int status = Visual.updateColors(choice);
 
         if(status == -1){
             Visual.error();
         }
-    }
-
-    public int configureColors(String colors){
-        String c[] = colors.split("-");
-        if(c.length == 2){
-            int cont = 0;
-            while(cont < 2){
-                switch(c[cont]){
-                    case "RED","CYAN","YELLOW","BLUE","GREEN","PURPLE" ->{Visual.color1 = cont == 0 ? c[cont] : Visual.color1; Visual.color2 = cont == 1 ? c[cont] : Visual.color2;}
-                    default -> {return -1;}
-                }
-                cont ++;
-            }
-            saveWatches();
-            return 0;
+        else{
+            this.colors = choice;
+            saveColors();
+            Visual.success("Successfully changed the colors!");
         }
-
-        return -1;
     }
 }
