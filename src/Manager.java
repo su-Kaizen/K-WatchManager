@@ -240,27 +240,28 @@ public class Manager {
     }
 
     public void showWatchHistory(String id){
+        String input = "";
         Watch w = getWatch(id);
         if(w != null){
-
             // if this returns 0 means that the log is not empty
             int r = w.showHistory();
-            if(r == 0){
-                System.out.println(Visual.color1 +"Clear log? [Y/n]"+Visual.END);
-                String input = getInput(false).toLowerCase();
-                if(input.equals("y")){
-                    System.out.println(Visual.color1 +"You sure? [Y/n]"+Visual.END);
-                    input = getInput(false).toLowerCase();
-                    if(input.equals("y")){
-                        w.clearLog();
+            Visual.logMenu();
+            input = getInput(false);
+            switch(input) {
+                case "1" -> this.removeAllLogs(w);
+                case "2" -> {
+                    int status = w.removeLastEntry();
+                    if (status == 0) {
                         saveWatches();
-                        Visual.success("Watch logs removed.");
-                        getInput(true);
+                        Visual.success("Successfully removed the last entry");
+
+                    } else {
+                        Visual.error("Something wrong happened");
                     }
+                    getInput(true);
                 }
-            }
-            else{
-                getInput(true);
+                case "3" -> {}
+                default -> Visual.error();
             }
         }
     }
@@ -310,6 +311,18 @@ public class Manager {
             this.colors = choice;
             saveColors();
             Visual.success("Successfully changed the colors!");
+        }
+    }
+
+
+    public void removeAllLogs(Watch w){
+        System.out.println(Visual.color1 +"You sure [Y/n]"+Visual.END);
+        String input = getInput(false).toLowerCase();
+        if(input.equals("y")){
+            w.clearLog();
+            saveWatches();
+            Visual.success("Watch logs removed.");
+            getInput(true);
         }
     }
 }

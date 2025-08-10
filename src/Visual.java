@@ -123,5 +123,9 @@ public class Visual {
 
         return -1;
     }
+
+    public static void logMenu(){
+        System.out.println(color1+"[1] Clear all the log\n[2] Clear last entry\n[3] Main menu"+END);
+    }
 }
 
