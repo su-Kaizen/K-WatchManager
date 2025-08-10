@@ -70,13 +70,48 @@ public class Manager {
         String input = getInput(false).toLowerCase();
         String[] split = input.split("-");
         switch (split[0]){
-            case "1" -> addWatch();
-            case "2" -> {if(split.length == 2) {checkAccuracy(split[1]);} else{Visual.error();}}
-            case "3" -> {if(split.length == 2) {adjustWatch(split[1]);} else{Visual.error();}}
-            case "4" -> {if(split.length == 2) {showWatchHistory(split[1]);} else{Visual.error();}}
-            case "5" -> {if(split.length == 2) {modifyWatch(split[1]);} else{Visual.error();}}
-            case "6" -> {if(split.length == 2) {removeWatch(split[1]);} else{Visual.error();}}
-            case "7" -> changeColors();
+            case "1" -> {Visual.clear(); addWatch();}
+            case "2" -> {
+                if (split.length == 2) {
+                    Visual.clear();
+                    checkAccuracy(split[1]);
+                } else {
+                    Visual.error();
+                }
+            }
+            case "3" -> {
+                if (split.length == 2) {
+                    Visual.clear();
+                    adjustWatch(split[1]);
+                } else {
+                    Visual.error();
+                }
+            }
+            case "4" -> {
+                if (split.length == 2) {
+                    Visual.clear();
+                    showWatchHistory(split[1]);
+                } else {
+                    Visual.error();
+                }
+            }
+            case "5" -> {
+                if (split.length == 2) {
+                    Visual.clear();
+                    modifyWatch(split[1]);
+                } else {
+                    Visual.error();
+                }
+            }
+            case "6" -> {
+                if (split.length == 2) {
+                    Visual.clear();
+                    removeWatch(split[1]);
+                } else {
+                    Visual.error();
+                }
+            }
+            case "7" -> {Visual.clear();changeColors();}
             case "e" -> System.out.println("Exiting...\n");
             default -> System.out.println(Visual.RED+"Invalid option...\n"+Visual.END);
         }
@@ -90,7 +125,7 @@ public class Manager {
 
     // adding a watch to the list
     public void addWatch(){
-        Visual.clear();
+        
         Visual.showAddWatch();
         String watchInput = Manager.getInput(false);
         Watch w = Watch.makeWatch(watchInput);
@@ -105,7 +140,7 @@ public class Manager {
     public void checkAccuracy(String id){
         Watch w = getWatch(id); // get the specified watch
         if(w != null){
-            Visual.clear();
+            
             LocalDate last = w.getLastAdjust(); // The last adjustment
             LocalDate nowDate = LocalDate.now();
             LocalTime now = LocalTime.now();
@@ -161,7 +196,7 @@ public class Manager {
     public void adjustWatch(String id){
         Watch w = getWatch(id);
         if(w != null){
-            Visual.clear();
+            
             System.out.println(Visual.color1 +"Write 'today' if it was adjusted today or write a date("+Visual.color2+"yyyy-mm-dd"+Visual.color1 +")"+Visual.END);
 
             String input = getInput(false).toLowerCase();
@@ -225,7 +260,7 @@ public class Manager {
     public void modifyWatch(String id){
         Watch w = getWatch(id);
         if(w != null){
-            Visual.clear();
+            
             Visual.shortHeader();
             Visual.line();
             System.out.println(w.shortString());
