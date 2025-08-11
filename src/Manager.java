@@ -1,3 +1,5 @@
+import com.sun.source.tree.Tree;
+
 import java.io.*;
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
@@ -8,12 +10,12 @@ import java.time.*;
 
 public class Manager {
     public static Scanner sc = new Scanner(System.in);
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("y-MM-dd HH:mm:ss");
     ArrayList<Watch> watches;
     private DecimalFormat decimalFormat;
     String colors;
+    public static String f = "watches-2.bin";
     public Manager(){
-
         decimalFormat = new DecimalFormat("#.##");
         int status = loadWatches();
         loadColors();
@@ -25,10 +27,11 @@ public class Manager {
 
     // loads the list of watches and returns -1 if it fails.
     public int loadWatches(){
-        try(ObjectInputStream o = new ObjectInputStream(new FileInputStream("watches.bin"))){
+        try(ObjectInputStream o = new ObjectInputStream(new FileInputStream(f))){
             watches = (ArrayList<Watch>) o.readObject();
         }
         catch(ClassNotFoundException | IOException ex){
+            ex.printStackTrace();
             return -1;
         }
         return 0;
@@ -36,7 +39,7 @@ public class Manager {
 
     // Save the list of watches
     public void saveWatches(){
-        try(ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream("watches.bin"))){
+        try(ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(f))){
             o.writeObject(watches);
         }
         catch(IOException ex){
@@ -141,8 +144,8 @@ public class Manager {
         Watch w = getWatch(id); // get the specified watch
         if(w != null){
             
-            LocalDate last = w.getLastAdjust(); // The last adjustment
-            LocalDate nowDate = LocalDate.now();
+            LocalDateTime last = w.getLastAdjust(); // The last adjustment
+            LocalDate nowDay = LocalDate.now();
             LocalTime now = LocalTime.now();
             now = now.plusMinutes(1); // The actual time with one minute more
             now = now.minusSeconds(now.getSecond()); // Remove the seconds, to do properly the dif later
@@ -168,10 +171,10 @@ public class Manager {
             // if there is a last adjustment, make an approximate deviation per day
             if(last != null){
                 // The days difference between the last adjustment and today date.
+                int days = 1; // It will stay at 1 if the day of last adjustment is the same as the checking accuracy
 
-                int days = 1;
-                if(!last.isEqual(nowDate)){
-                    days = (int) last.until(nowDate,ChronoUnit.DAYS);
+                if(sameDay(last,LocalDateTime.now())){
+                    days = (int) last.until(nowDay,ChronoUnit.DAYS);
                 }
 
                 // avoiding negative value
@@ -183,11 +186,11 @@ public class Manager {
                         ". That's a round "+Visual.color2+deviationPerDay+Visual.color1 +" seconds per day."+Visual.END);
 
                 // Record a log on the watch with the seconds deviation per day.
-                w.addLog(LocalDate.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
+                w.addLog(LocalDateTime.now(),diff+" seconds deviation. A round "+deviationPerDay+"s per day.");
             }
             else{
                 // Without the deviation per day
-                w.addLog(LocalDate.now(),diff+" seconds deviation.");
+                w.addLog(LocalDateTime.now(),diff+" seconds deviation.");
             }
             saveWatches(); // important to save the watches to keep the log updated
         }
@@ -197,24 +200,20 @@ public class Manager {
         Watch w = getWatch(id);
         if(w != null){
             
-            System.out.println(Visual.color1 +"Write 'today' if it was adjusted today or write a date("+Visual.color2+"yyyy-mm-dd"+Visual.color1 +")"+Visual.END);
+            System.out.println(Visual.color1 +"Write 'now' if it was adjusted now or write a date("+Visual.color2+"YYYY-MM-DD hh:mm:ss"+Visual.color1 +")"+Visual.END);
 
             String input = getInput(false).toLowerCase();
             // Simply put the lastAdjustment to today
-            if(input.equals("today")){
-                LocalDate now = LocalDate.now();
+            if(input.equals("now")){
+                LocalDateTime now = LocalDateTime.now();
                 w.setLastAdjust(now);
                 w.addLog(now, "Adjusted.");
                 Visual.success("Successfully adjusted the watch!");
 
             }
             else{
-                try { // trying to split the input date and parse it to LocalDate
-                    String[] date = input.split("-");
-                    LocalDate d = LocalDate.of(
-                            Integer.parseInt(date[0]),
-                            Integer.parseInt(date[1]),
-                            Integer.parseInt(date[2]));
+                try { // trying to parse the input to LocalDateTime;
+                    LocalDateTime d = LocalDateTime.parse(input,formatter);
 
                     w.setLastAdjust(d);
                     w.addLog(d,"Adjusted.");
@@ -249,7 +248,7 @@ public class Manager {
         return input;
     }
 
-    public static String getDaysAgo(LocalDate date){
+    public static String getDaysAgo(LocalDateTime date){
         long diff = date.until(LocalDate.now(), ChronoUnit.DAYS);
         if(diff == 0){
             return "(today)";
@@ -359,5 +358,9 @@ public class Manager {
             Visual.success("Watch logs removed.");
             getInput(true);
         }
+    }
+
+    private boolean sameDay(LocalDateTime d1, LocalDateTime d2){
+        return d1.getDayOfYear() == d2.getDayOfYear() && d1.getYear() == d2.getYear();
     }
 }

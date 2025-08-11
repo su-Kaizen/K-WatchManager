@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Watch implements Serializable {
@@ -8,8 +9,9 @@ public class Watch implements Serializable {
     private String model;
     private String theoreticAccuracy;
     private String type;
-    private LocalDate lastAdjust;
-    private TreeMap<LocalDate,String> log;
+    private LocalDateTime lastAdjust;
+    public TreeMap<LocalDateTime,String> log;
+    public TreeMap<LocalDateTime, String> newLog;
     private String moreInfo;
     private static final long serialVersionUID = -4126365443326262519L;
     public Watch(String b, String m, String ty, String c, String t, String mi){
@@ -28,11 +30,11 @@ public class Watch implements Serializable {
         brand = b.toUpperCase();
     }
 
-    public LocalDate getLastAdjust(){
+    public LocalDateTime getLastAdjust(){
         return lastAdjust;
     }
 
-    public void setLastAdjust(LocalDate date){
+    public void setLastAdjust(LocalDateTime date){
         lastAdjust = date;
     }
 
@@ -85,8 +87,9 @@ public class Watch implements Serializable {
         int result = -1;
         System.out.println(Visual.CYAN+"+-----------------------------------+"+Visual.END);
         if(!log.isEmpty()){
-            for(LocalDate date: log.keySet()){
-                System.out.println(Visual.color1 +date+" -> "+log.get(date)+Visual.END);
+            for(LocalDateTime date: log.keySet()){
+                String d = date.format(Manager.formatter);
+                System.out.println(Visual.color1 +d+" -> "+log.get(date)+Visual.END);
             }
             result = 0;
         }
@@ -98,7 +101,7 @@ public class Watch implements Serializable {
         return result;
     }
 
-    public void addLog(LocalDate date, String action){
+    public void addLog(LocalDateTime date, String action){
         log.put(date,action);
     }
 
@@ -108,7 +111,7 @@ public class Watch implements Serializable {
     }
 
     public int removeLastEntry(){
-        LocalDate k = log.lastKey();
+        LocalDateTime k = log.lastKey();
         return log.remove(k) == null ? -1 : 0;
     }
 }
