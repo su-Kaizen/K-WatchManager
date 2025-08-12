@@ -10,11 +10,12 @@ import java.time.*;
 
 public class Manager {
     public static Scanner sc = new Scanner(System.in);
-    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("y-MM-dd HH:mm:ss");
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+    public static DateTimeFormatter LocalDateTimef = DateTimeFormatter.ofPattern("y-MM-dd HH:mm:ss");
     ArrayList<Watch> watches;
     private DecimalFormat decimalFormat;
     String colors;
-    public static String f = "watches-2.bin";
+    public static String f = "watches.bin";
     public Manager(){
         decimalFormat = new DecimalFormat("#.##");
         int status = loadWatches();
@@ -31,7 +32,6 @@ public class Manager {
             watches = (ArrayList<Watch>) o.readObject();
         }
         catch(ClassNotFoundException | IOException ex){
-            ex.printStackTrace();
             return -1;
         }
         return 0;
@@ -164,7 +164,7 @@ public class Manager {
 
             // Getting the difference between the real time and the watch one
             String diff = now.until(watchHour, ChronoUnit.SECONDS)+"";
-            diff = !diff.contains("-") ? "+"+diff : diff;
+            diff = !diff.contains("-") ? "+"+diff : diff; // Putting a + sign if its not negative
 
             System.out.println(Visual.color1 +"Your watch has a "+Visual.color2+diff+Visual.color1 +" seconds deviation."+Visual.END);
 
@@ -173,7 +173,7 @@ public class Manager {
                 // The days difference between the last adjustment and today date.
                 int days = 1; // It will stay at 1 if the day of last adjustment is the same as the checking accuracy
 
-                if(sameDay(last,LocalDateTime.now())){
+                if(!sameDay(last,LocalDateTime.now())){
                     days = (int) last.until(nowDay,ChronoUnit.DAYS);
                 }
 
@@ -182,7 +182,7 @@ public class Manager {
 
                 // Round the double seconds to 2 decimals
                 String deviationPerDay = decimalFormat.format(Double.parseDouble(diff)/days).replace(",",".");
-                System.out.println(Visual.color1 +"The last adjustment was in "+Visual.color2+last+Visual.color1 +" "+getDaysAgo(last) +
+                System.out.println(Visual.color1 +"The last adjustment was in "+Visual.color2+last.format(Manager.LocalDateTimef)+Visual.color1 +" "+getDaysAgo(last) +
                         ". That's a round "+Visual.color2+deviationPerDay+Visual.color1 +" seconds per day."+Visual.END);
 
                 // Record a log on the watch with the seconds deviation per day.
@@ -213,9 +213,7 @@ public class Manager {
             }
             else{
                 try { // trying to parse the input to LocalDateTime;
-                    LocalDateTime d = LocalDateTime.parse(input,formatter);
-
-                    w.setLastAdjust(d);
+                    LocalDateTime d = LocalDateTime.parse(input,LocalDateTimef);
                     w.addLog(d,"Adjusted.");
                     Visual.success("Successfully adjusted the watch!");
                 }
@@ -249,7 +247,7 @@ public class Manager {
     }
 
     public static String getDaysAgo(LocalDateTime date){
-        long diff = date.until(LocalDate.now(), ChronoUnit.DAYS);
+        long diff = date.until(LocalDateTime.now(), ChronoUnit.DAYS);
         if(diff == 0){
             return "(today)";
         }

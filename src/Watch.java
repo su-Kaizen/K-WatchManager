@@ -11,6 +11,7 @@ public class Watch implements Serializable {
     private String type;
     private LocalDateTime lastAdjust;
     public TreeMap<LocalDateTime,String> log;
+    public LocalDateTime newLastAdjust;
     public TreeMap<LocalDateTime, String> newLog;
     private String moreInfo;
     private static final long serialVersionUID = -4126365443326262519L;
@@ -46,7 +47,7 @@ public class Watch implements Serializable {
     public String toString(){
         String s = brand+Visual.PIPE+model+Visual.PIPE+type+Visual.PIPE+caliber+Visual.PIPE+theoreticAccuracy;
 
-        return lastAdjust == null ? s+Visual.PIPE+"N/a"+Visual.PIPE+moreInfo : s+Visual.PIPE+lastAdjust+" "+Manager.getDaysAgo(lastAdjust)+Visual.PIPE+moreInfo;
+        return lastAdjust == null ? s+Visual.PIPE+"N/a"+Visual.PIPE+moreInfo : s+Visual.PIPE+lastAdjust.format(Manager.LocalDateTimef)+" "+Manager.getDaysAgo(lastAdjust)+Visual.PIPE+moreInfo;
     }
 
     public String shortString(){
@@ -88,8 +89,8 @@ public class Watch implements Serializable {
         System.out.println(Visual.CYAN+"+-----------------------------------+"+Visual.END);
         if(!log.isEmpty()){
             for(LocalDateTime date: log.keySet()){
-                String d = date.format(Manager.formatter);
-                System.out.println(Visual.color1 +d+" -> "+log.get(date)+Visual.END);
+                // String d = date.format(Manager.formatter);
+                System.out.println(Visual.color1 +date.format(Manager.LocalDateTimef)+" -> "+log.get(date)+Visual.END);
             }
             result = 0;
         }
