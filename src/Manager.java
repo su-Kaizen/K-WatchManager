@@ -145,7 +145,7 @@ public class Manager {
         if(w != null){
             
             LocalDateTime last = w.getLastAdjust(); // The last adjustment
-            LocalDate nowDay = LocalDate.now();
+            LocalDateTime nowDay = LocalDateTime.now();
             LocalTime now = LocalTime.now();
             now = now.plusMinutes(1); // The actual time with one minute more
             now = now.minusSeconds(now.getSecond()); // Remove the seconds, to do properly the dif later
